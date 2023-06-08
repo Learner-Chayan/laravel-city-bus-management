@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}"> 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title> {{$page_title}} | {{$site_title}}</title>
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="{{asset('public/favicon.png') }}">
@@ -207,6 +207,15 @@
         } );
 
     } );
+
+
+    function reload(time=2000){
+        setTimeout(()=>{ location.reload() },time);
+    }
+
+    function makeDisable(disable=false){
+        $(".submit_btn").prop('disabled',disable);
+    }
 
 </script>
  @stack('js')

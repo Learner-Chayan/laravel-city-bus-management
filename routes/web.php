@@ -49,8 +49,14 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function () {
     Route::resource('socials','Controllers\SocialController');
     Route::resource('faqs','Controllers\FaqController');
     Route::resource('stoppage','StopageController');
+    Route::resource('owner','OwnerController');
+    Route::post('owner-update', ['as' => 'owner-update', 'uses' => 'OwnerController@update']);
+
     Route::resource('bus','BusController');
     Route::post('bus-update', ['as' => 'bus-update', 'uses' => 'BusController@update']);
+
+    Route::resource('route','RouteController');
+    Route::post('route-update', ['as' => 'route-update', 'uses' => 'RouteController@update']);
 
 
 });

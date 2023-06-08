@@ -70,7 +70,7 @@
         </div>
     </div>
 
-        
+
     <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <form id="stoppageForm">
@@ -91,7 +91,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="submit" class="btn btn-primary submit_btn">Save</button>
                     </div>
                 </div>
             </form>
@@ -128,7 +128,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Update</button>
+                        <button type="submit" class="btn btn-primary submit_btn">Update</button>
                     </div>
                 </div>
             </form>
@@ -148,8 +148,9 @@
                 $("#delete_id").val(id);
             });
 
-            //add form 
+            //add form
             $("#stoppageForm").on("submit",function(e){
+                makeDisable(true);
                 e.preventDefault();
                 let name = $("#stoppage-name").val();
                 $.ajaxSetup({
@@ -157,7 +158,7 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
-                //ajax 
+                //ajax
                 $.ajax({
                     method:"POST",
                     url: "{{route('stoppage.store')}}",
@@ -167,22 +168,24 @@
                         console.log(res);
                        // $("#error").text('res');
 
-                       $("#success").text("Inserted Successfully !!");
-                        setTimeout(()=>{ $("#success").text(''); },3000);
+                       toastr.success("Inserted Successfully !!");
+                       reload();
                     },
                     error:function(err){
                         console.log(err);
                         const msg = JSON.parse(err.responseText).message;
-                        $("#error").text(msg);
-                        setTimeout(()=>{ $("#error").text(''); },3000);
+                        toastr.error(msg);
+                        makeDisable(false);
+
                     }
                 })
 
             });
 
 
-            //update form 
+            //update form
             $("#updateStoppageForm").on("submit",function(e){
+                makeDisable(true);
                 e.preventDefault();
                 let name = $("#editStoppage-name").val();
                 let id = $("#id").val();
@@ -192,21 +195,21 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
-                //ajax 
+                //ajax
                 $.ajax({
                     method:"PUT",
                     url: "{{route('stoppage.update',"+id+")}}",
                     data: {"name":name,id:id,"status":status},
                     success:function(res){
                         console.log(res);
-                       $("#updateSuccess").text("Updated Successfully !!");
-                        setTimeout(()=>{ $("#updateSuccess").text(''); },3000);
+                       toastr.success("Updated Successfully !!");
+                        reload();
                     },
                     error:function(err){
                         console.log(err);
                         const msg = JSON.parse(err.responseText).message;
-                        $("#updateError").text(msg);
-                        setTimeout(()=>{ $("#updateError").text(''); },3000);
+                        toastr.error(msg);
+                        makeDisable(false);
                     }
                 })
 

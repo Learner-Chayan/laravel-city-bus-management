@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('buses', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('owner_id');
             $table->string('name',50);
             $table->string('reg_number',50);
             $table->string('reg_last_date');

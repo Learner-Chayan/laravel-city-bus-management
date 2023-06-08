@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bus;
+use App\User;
 use Illuminate\Http\Request;
 
 class BusController extends Controller
@@ -14,7 +15,8 @@ class BusController extends Controller
     public function index()
     {
         $data['page_title'] = "Bus List";
-        $data['buses'] = Bus::latest()->get();
+        $data['buses'] = Bus::with('owner')->latest()->get();
+        $data['owners'] = User::where('customer_type',2)->latest()->get();
         return view('admin.bus.index',$data);
     }
 
@@ -40,12 +42,15 @@ class BusController extends Controller
             'name' => 'required|string|unique:buses,name',
             'reg_number' => 'required|string|unique:buses,reg_number',
             'reg_last_date' => 'required|string',
+            'owner_id' => 'required',
         ]);
 
         if(!$valid){
             return response()->json();
         }
         $in = $request->all();
+        $in['owner_id'] = 4;//$request->owner_id;
+//        return $in;
         Bus::create($in);
         return response()->json();
     }
@@ -96,6 +101,7 @@ class BusController extends Controller
             }
 
             $in = $request->all();
+            $in['owner_id'] = $request->owner_id ;
             $bus->fill($in)->save();
             return $bus;
     }
