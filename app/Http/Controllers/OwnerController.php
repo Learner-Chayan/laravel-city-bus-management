@@ -6,7 +6,9 @@ use App\Models\Owner;
 use App\User;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
+use Intervention\Image\Facades\Image;
 use Spatie\Permission\Models\Role;
 
 class OwnerController extends Controller
@@ -50,9 +52,15 @@ class OwnerController extends Controller
             return response()->json();
         }
         $in = $request->all();
-        $in['temp_password'] = 123456;
-        $in['password'] = 123456; //default password
-        $in['customer_type'] = 2; // owner
+        if ($request->hasFile('image'))
+        {
+            $image = $request->file('image');
+            $imgName = uniqid().'.'.$image->getClientOriginalExtension();
+//            return response()->json($imgName);
+            Image::make($image)->save(public_path("images/user/$imgName"));
+            $in['image'] = $imgName;
+
+        }
         $user = User::create($in);
 
         $role = Role::where('name','owner')->first();
@@ -102,8 +110,21 @@ class OwnerController extends Controller
             return response()->json();
         }
         $in = $request->all();
+        $in['temp_password'] = 123456;
+        $in['password'] = 123456; //default password
+        $in['customer_type'] = 2; // owner
+        if ($request->hasFile('image'))
+        {
+            File::delete(public_path("images/user/$owner->image"));
+            $image = $request->file('image');
+            $imgName = uniqid().'.'.$image->getClientOriginalExtension();
+            Image::make($image)->save(public_path("images/user/$imgName"));
+            $in['image'] = $imgName;
+
+        }
         $owner->fill($in)->save();
-        return $owner;
+
+        return response()->json();
     }
 
     /**

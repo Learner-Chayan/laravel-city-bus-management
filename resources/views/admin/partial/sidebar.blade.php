@@ -8,6 +8,14 @@
             <li><a class="{{Request::is('admin/route') ? 'active' : ''}}" href="{{route('route.index')}}"><i class="icon-star"></i><span class="nav-text">Route</span></a></li>
             <li><a class="{{Request::is('admin/stoppage') ? 'active' : ''}}" href="{{route('stoppage.index')}}"><i class="icon-star"></i><span class="nav-text">Stoppage</span></a></li>
             <li><a class="{{Request::is('admin/owner') ? 'active' : ''}}" href="{{route('owner.index')}}"><i class="icon-user-follow"></i><span class="nav-text">Bus Owner</span></a></li>
+            <li class="{{Request::is('admin/driver') ? 'active' : ''}}">
+                <a class="has-arrow" aria-expanded="false">
+                    <i class="icon-user-following "></i><span class="nav-text">Employee</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="{{route('driver.index')}}">Driver</a></li>
+                </ul>
+            </li>
             <li class="{{Request::is('admin/get-basic') ? 'active' : ''}}">
                 <a class="has-arrow" aria-expanded="false">
                     <i class="icon-settings "></i><span class="nav-text">Basic Setting</span>
@@ -17,7 +25,7 @@
                 </ul>
             </li>
             <li>
-                <a class="{{Request::is('admin/users') || Request::is('admin/users/create') || Request::is('admin/users/*/edit') ? 'active' : ''}}" href="{{route('users.index')}}"><i class="icon-user"></i><span class="nav-text">User</span></a>
+                <a class="{{Request::is('admin/users') || Request::is('admin/users/create') || Request::is('admin/users/*/edit') ? 'active' : ''}}" href="{{route('users.index')}}"><i class="icon-user"></i><span class="nav-text">System User</span></a>
             </li>
             <li class="{{Request::is('admin/permissions') || Request::is('admin/permissions/create') || Request::is('admin/permissions/*/edit') ||Request::is('admin/roles') || Request::is('admin/roles/create') || Request::is('admin/roles/*/edit') ? 'active' : ''}}">
                 <a class="has-arrow" aria-expanded="false">

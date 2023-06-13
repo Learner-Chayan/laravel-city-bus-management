@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('reg_number',50);
             $table->string('reg_last_date');
             $table->string('reg_image',50)->nullable();
+            $table->string('seat_number')->default('0');
             $table->timestamps();
         });
     }

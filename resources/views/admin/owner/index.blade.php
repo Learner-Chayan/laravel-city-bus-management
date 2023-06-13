@@ -24,7 +24,7 @@
                             @foreach ($owners as $key => $owner)
                                 <tr>
                                     <td>{{ ++$key }}</td>
-                                    <td>owner Image</td>
+                                    <td><img width="75" src="{{asset('public/images/user')}}/{{$owner->image}}" alt="Owner Image"></td>
                                     <td>{{ $owner->name }}</td>
                                     <td>{{ $owner->phone }}</td>
                                     <td>{{ $owner->email }}</td>
@@ -97,6 +97,10 @@
                             <input type="email" class="form-control" id="email" name="email">
 
                         </div>
+                        <div class="form-group">
+                            <label for="image" class="col-form-label">Image:</label>
+                            <input type="file" class="form-control" id="image" name="image">
+                        </div>
 {{--                        <div class="form-group">--}}
 {{--                            <label for="email" class="col-form-label">Address:</label>--}}
 {{--                            <input type="text" class="form-control" id="address" name="address">--}}
@@ -120,7 +124,7 @@
 
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editModalLabel">Update Stoppage</h5>
+                        <h5 class="modal-title" id="editModalLabel">Update Owner</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
@@ -140,6 +144,10 @@
                             <label for="email" class="col-form-label">Email:</label>
                             <input type="email" class="form-control" id="edit_email" name="email">
 
+                        </div>
+                        <div class="form-group">
+                            <label for="image" class="col-form-label">Image:</label>
+                            <input type="file" class="form-control" id="image" name="image">
                         </div>
 {{--                        <div class="form-group">--}}
 {{--                            <label for="email" class="col-form-label">Address:</label>--}}

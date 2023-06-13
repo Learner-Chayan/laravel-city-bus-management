@@ -43,6 +43,7 @@ class BusController extends Controller
             'reg_number' => 'required|string|unique:buses,reg_number',
             'reg_last_date' => 'required|string',
             'owner_id' => 'required',
+            'seat_number' => 'required|numeric',
         ]);
 
         if(!$valid){
@@ -93,6 +94,9 @@ class BusController extends Controller
                 'name' => 'required|string|unique:buses,name,'.$bus->id,
                 'reg_number' => 'required|string|unique:buses,reg_number,'.$bus->id,
                 'reg_last_date' => 'required|string',
+                'seat_number' => 'required|numeric',
+                'owner_id' => 'required',
+
             ]);
 
 

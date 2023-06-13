@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\UserDetails;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -16,6 +17,10 @@ class User extends Authenticatable
     public function setPasswordAttribute($password)
     {
         $this->attributes['password'] = bcrypt($password);
+    }
+    public function userDetails()
+    {
+        return $this->belongsTo(UserDetails::class,'user_id','id');
     }
 
     protected $hidden = [

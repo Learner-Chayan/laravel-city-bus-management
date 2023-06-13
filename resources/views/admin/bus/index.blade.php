@@ -15,6 +15,7 @@
                                 <th class="text-bold text-uppercase">#SL</th>
                                 <th class="text-bold text-uppercase">Owner</th>
                                 <th class="text-bold text-uppercase">Bus Name</th>
+                                <th class="text-bold text-uppercase">Total Seat</th>
                                 <th class="text-bold text-uppercase">Reg Number</th>
                                 <th class="text-bold text-uppercase">Reg Last Date</th>
                                 <th class="text-bold text-uppercase">Reg Image</th>
@@ -27,6 +28,7 @@
                                     <td>{{ ++$key }}</td>
                                     <td>{{ $bus->owner->name }}</td>
                                     <td>{{ $bus->name }}</td>
+                                    <td>{{ $bus->seat_number }}</td>
                                     <td>{{ $bus->reg_number }}</td>
                                     <td>{{ $bus->reg_last_date }}</td>
                                     <td>{{ $bus->reg_image }}</td>
@@ -92,8 +94,12 @@
                             </select>
                         </div>
                         <div class="form-group">
-                                <label for="bus-name" class="col-form-label">Bus Name:</label>
-                                <input type="text" class="form-control" id="bus-name" name="name">
+                            <label for="bus-name" class="col-form-label">Bus Name:</label>
+                            <input type="text" class="form-control" id="bus-name" name="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="bus-name" class="col-form-label">Total Seat:</label>
+                            <input type="text" class="form-control" id="bus-seat" name="seat_number">
                         </div>
                         <div class="form-group">
                             <label for="bus-name" class="col-form-label">Reg Number:</label>
@@ -142,7 +148,10 @@
                         <div class="form-group">
                             <label for="bus-name" class="col-form-label">Bus Name:</label>
                             <input type="text" class="form-control" id="edit-bus-name" name="name">
-
+                        </div>
+                        <div class="form-group">
+                            <label for="bus-name" class="col-form-label">Total Seat:</label>
+                            <input type="text" class="form-control" id="edit_bus-seat" name="seat_number">
                         </div>
                         <div class="form-group">
                             <label for="bus-name" class="col-form-label">Reg Number:</label>
@@ -265,6 +274,7 @@
             $('#edit_owner_id').val(ownerId).trigger('change');
 
             $("#edit-id").val(data.id);
+            $("#edit_bus-seat").val(data.seat_number);
             $("#edit-bus-name").val(data.name);
             $("#edit-reg-number").val(data.reg_number);
             $("#edit-reg-last-date").val(data.reg_last_date);

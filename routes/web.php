@@ -52,6 +52,12 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function () {
     Route::resource('owner','OwnerController');
     Route::post('owner-update', ['as' => 'owner-update', 'uses' => 'OwnerController@update']);
 
+    Route::resource('driver','DriverController');
+    Route::post('driver-update', ['as' => 'driver-update', 'uses' => 'DriverController@update']);
+
+    Route::resource('customer','CustomerController');
+    Route::post('customer-update', ['as' => 'customer-update', 'uses' => 'CustomerController@update']);
+
     Route::resource('bus','BusController');
     Route::post('bus-update', ['as' => 'bus-update', 'uses' => 'BusController@update']);
 
