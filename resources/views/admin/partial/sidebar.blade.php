@@ -6,6 +6,7 @@
             <li><a class="{{Request::is('dashboard') ? 'active' : ''}}" href="{{route('dashboard')}}"><i class="icon-speedometer"></i><span class="nav-text">Dashboard</span></a></li>
             <li><a class="{{Request::is('admin/bus') ? 'active' : ''}}" href="{{route('bus.index')}}"><i class="icon-star"></i><span class="nav-text">Bus</span></a></li>
             <li><a class="{{Request::is('admin/route') ? 'active' : ''}}" href="{{route('route.index')}}"><i class="icon-star"></i><span class="nav-text">Route</span></a></li>
+            <li><a class="{{Request::is('admin/fare') ? 'active' : ''}}" href="{{route('fare.index')}}"><i class="icon-star"></i><span class="nav-text">Fare Calculation</span></a></li>
             <li><a class="{{Request::is('admin/stoppage') ? 'active' : ''}}" href="{{route('stoppage.index')}}"><i class="icon-star"></i><span class="nav-text">Stoppage</span></a></li>
             <li><a class="{{Request::is('admin/owner') ? 'active' : ''}}" href="{{route('owner.index')}}"><i class="icon-user-follow"></i><span class="nav-text">Bus Owner</span></a></li>
             <li><a class="{{Request::is('admin/customer') ? 'active' : ''}}" href="{{route('customer.index')}}"><i class="icon-user-unfollow"></i><span class="nav-text">Customer</span></a></li>

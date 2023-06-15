@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\FareController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -63,6 +64,11 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function () {
 
     Route::resource('route','RouteController');
     Route::post('route-update', ['as' => 'route-update', 'uses' => 'RouteController@update']);
+
+
+    //fare
+    Route::get('/fare', [FareController::class, 'index'])->name('fare.index');
+    Route::post('/fare', [FareController::class, 'pricing'])->name('fare.update');
 
 
 });
