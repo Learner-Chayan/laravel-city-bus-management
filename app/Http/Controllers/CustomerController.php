@@ -14,17 +14,18 @@ class CustomerController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth','Setting','role:admin|']);
+        $this->middleware(['auth','Setting','role:admin|customer']);
     }
     public function index()
     {
         $data['page_title'] = "Customer List";
-        $data['customers'] = User::where('customer_type',5)->latest()->get();//csutomer
+        $data['customers'] = User::where('customer_type',5)->latest()->get();//customer
         return view('admin.customer.index',$data);
     }
 
     public function store(Request $request)
     {
+//        return $request->all();
         $valid = Validator::make($request->all(),[
             'name' => 'required|string',
             'phone' => 'required|string"|unique:users,phone',
@@ -37,7 +38,7 @@ class CustomerController extends Controller
         $in = $request->all();
         $in['temp_password'] = 123456;
         $in['password'] = 123456; //default password
-        $in['customer_type'] = 5; // csutomer
+        $in['customer_type'] = 5; // customer
 
         if ($request->hasFile('image'))
         {

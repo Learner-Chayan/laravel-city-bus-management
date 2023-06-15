@@ -52,6 +52,9 @@ class OwnerController extends Controller
             return response()->json();
         }
         $in = $request->all();
+        $in['temp_password'] = 123456;
+        $in['password'] = 123456; //default password
+        $in['customer_type'] = 2; // owner
         if ($request->hasFile('image'))
         {
             $image = $request->file('image');
@@ -110,9 +113,6 @@ class OwnerController extends Controller
             return response()->json();
         }
         $in = $request->all();
-        $in['temp_password'] = 123456;
-        $in['password'] = 123456; //default password
-        $in['customer_type'] = 2; // owner
         if ($request->hasFile('image'))
         {
             File::delete(public_path("images/user/$owner->image"));

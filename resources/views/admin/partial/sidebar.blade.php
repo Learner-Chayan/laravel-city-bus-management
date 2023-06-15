@@ -8,12 +8,15 @@
             <li><a class="{{Request::is('admin/route') ? 'active' : ''}}" href="{{route('route.index')}}"><i class="icon-star"></i><span class="nav-text">Route</span></a></li>
             <li><a class="{{Request::is('admin/stoppage') ? 'active' : ''}}" href="{{route('stoppage.index')}}"><i class="icon-star"></i><span class="nav-text">Stoppage</span></a></li>
             <li><a class="{{Request::is('admin/owner') ? 'active' : ''}}" href="{{route('owner.index')}}"><i class="icon-user-follow"></i><span class="nav-text">Bus Owner</span></a></li>
+            <li><a class="{{Request::is('admin/customer') ? 'active' : ''}}" href="{{route('customer.index')}}"><i class="icon-user-unfollow"></i><span class="nav-text">Customer</span></a></li>
             <li class="{{Request::is('admin/driver') ? 'active' : ''}}">
                 <a class="has-arrow" aria-expanded="false">
                     <i class="icon-user-following "></i><span class="nav-text">Employee</span>
                 </a>
                 <ul aria-expanded="false">
                     <li><a href="{{route('driver.index')}}">Driver</a></li>
+                    <li><a href="{{route('driver.index')}}">TT</a></li>
+                    <li><a href="{{route('driver.index')}}">Helper</a></li>
                 </ul>
             </li>
             <li class="{{Request::is('admin/get-basic') ? 'active' : ''}}">
