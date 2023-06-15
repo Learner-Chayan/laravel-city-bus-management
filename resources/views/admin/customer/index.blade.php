@@ -24,7 +24,13 @@
                             @foreach ($customers as $key => $customer)
                                 <tr>
                                     <td>{{ ++$key }}</td>
-                                    <td><img width="75" src="{{asset('public/images/user')}}/{{$customer->image}}" alt="Customer Image"></td>
+                                    <td>
+                                        @if($customer->image == null)
+                                            <img width="50" src="{{asset('public/default.png')}}" alt="Customer Image">
+                                        @else
+                                            <img width="50" src="{{asset('public/images/user')}}/{{$customer->image}}" alt="Customer Image">
+                                        @endif
+                                    </td>
                                     <td>{{ $customer->name }}</td>
                                     <td>{{ $customer->phone }}</td>
                                     <td>{{ $customer->email }}</td>
@@ -200,7 +206,7 @@
                     success:function(res){
                         console.log(res);
                         toastr.success("Inserted Successfully !!");
-                        // reload();
+                        reload();
                     },
                     error:function(err){
                         console.log(err);

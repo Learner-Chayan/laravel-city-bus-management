@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
 
             $table->string('last_name',50)->nullable();
-            $table->string('image',100);
+            $table->string('image',100)->nullable();
             $table->string('phone',20);
             $table->integer('customer_type');
             $table->string('temp_password');
