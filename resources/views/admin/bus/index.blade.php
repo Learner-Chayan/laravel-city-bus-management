@@ -7,7 +7,9 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">{{$page_title}}</h4>
-                    <button class="btn btn-primary uppercase text-bold float-right" data-toggle="modal" data-target="#addModal"> New Bus</button>
+                    @can(['bus-create'])
+                        <button class="btn btn-primary uppercase text-bold float-right" data-toggle="modal" data-target="#addModal"> New Bus</button>
+                    @endcan
                     <div class="table-responsive" style="overflow-x: hidden">
                         <table id="example" class="table table-striped table-bordered zero-configuration">
                             <thead>
@@ -31,7 +33,7 @@
                                     <td>{{ $bus->seat_number }}</td>
                                     <td>{{ $bus->reg_number }}</td>
                                     <td>{{ $bus->reg_last_date }}</td>
-                                    <td>{{ $bus->reg_image }}</td>
+                                    <td><img width="50" src="{{asset("public/images/bus/$bus->reg_image")}}" alt="buss number plate image"></td>
                                     <td>
                                         <button class="btn btn-sm btn-primary fa fa-edit" data-toggle="modal" data-target="#editModal" onclick="showFormData({{$bus}})"> Edit</button>
                                         @can('destroy')
@@ -216,7 +218,7 @@
                     success:function(res){
                         console.log(res);
                         toastr.success("Inserted Successfully !!");
-                        reload();
+                        // reload();
                     },
                     error:function(err){
                         console.log(err);

@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Bus;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Intervention\Image\Facades\Image;
 
 class BusController extends Controller
 {
     function __construct(){
-        $this->middleware(['Setting','auth']);
+        $this->middleware(['Setting','auth','role:admin|customer|employee|owner']);
     }
 
     public function index()
@@ -50,8 +52,14 @@ class BusController extends Controller
             return response()->json();
         }
         $in = $request->all();
-        $in['owner_id'] = 4;//$request->owner_id;
-//        return $in;
+        $in['owner_id'] = $request->owner_id;
+        if ($request->hasFile('reg_image'))
+        {
+            $file = $request->file('reg_image');
+            $fileName = uniqid().'.'.$file->getClientOriginalExtension();
+            Image::make($file)->save(public_path("images/bus/$fileName"));
+            $in['reg_image'] = $fileName;
+        }
         Bus::create($in);
         return response()->json();
     }
@@ -106,6 +114,14 @@ class BusController extends Controller
 
             $in = $request->all();
             $in['owner_id'] = $request->owner_id ;
+            if ($request->hasFile('reg_image'))
+            {
+                File::delete(public_path("images/bus/$bus->reg_image"));
+                $file = $request->file('reg_image');
+                $fileName = uniqid().'.'.$file->getClientOriginalExtension();
+                Image::make($file)->save(public_path("images/bus/$fileName"));
+                $in['reg_image'] = $fileName;
+            }
             $bus->fill($in)->save();
             return $bus;
     }
@@ -119,6 +135,7 @@ class BusController extends Controller
     public function destroy($id)
     {
         $buss = Bus::findOrFail($id);
+        File::delete(public_path("images/bus/$buss->reg_image"));
         $buss->delete();
         session()->flash('message','Bus deleted successfully !!');
         return redirect()->back();

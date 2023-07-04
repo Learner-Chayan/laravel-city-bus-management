@@ -4,6 +4,11 @@
         <ul class="metismenu" id="menu">
             <li class="nav-label">Dashboard</li>
             <li><a class="{{Request::is('dashboard') ? 'active' : ''}}" href="{{route('dashboard')}}"><i class="icon-speedometer"></i><span class="nav-text">Dashboard</span></a></li>
+            @role('customer')
+            <li><a class="{{Request::is('dashboard') ? 'active' : ''}}" href="{{route('dashboard')}}"><i class="fa fa-ticket"></i><span class="nav-text">Purchase Ticket</span></a></li>
+            <li><a class="{{Request::is('dashboard') ? 'active' : ''}}" href="{{route('dashboard')}}"><i class="fa fa-ticket"></i><span class="nav-text">Purchase History</span></a></li>
+            @endrole
+            @role('admin')
             <li><a class="{{Request::is('admin/bus') ? 'active' : ''}}" href="{{route('bus.index')}}"><i class="icon-star"></i><span class="nav-text">Bus</span></a></li>
             <li><a class="{{Request::is('admin/route') ? 'active' : ''}}" href="{{route('route.index')}}"><i class="icon-star"></i><span class="nav-text">Route</span></a></li>
             <li><a class="{{Request::is('admin/fare') ? 'active' : ''}}" href="{{route('fare.index')}}"><i class="icon-star"></i><span class="nav-text">Fare Calculation</span></a></li>
@@ -40,6 +45,7 @@
                     <li><a class="{{Request::is('admin/roles') || Request::is('admin/roles/create') || Request::is('admin/roles/*/edit') ? 'active' : ''}}" href="{{route('roles.index')}}">Role</a></li>
                 </ul>
             </li>
+            @endrole
         </ul>
     </div>
 </div>

@@ -15,7 +15,7 @@ class HomeController extends Controller
 
     public function __construct()
     {
-        $this->middleware(['auth','isAdmin','Setting']);
+        $this->middleware(['auth','role:admin|customer|employee|owner','Setting']);
     }
 
     public function dashboard()
