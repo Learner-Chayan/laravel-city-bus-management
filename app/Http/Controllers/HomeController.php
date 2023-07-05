@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Route;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -21,6 +22,7 @@ class HomeController extends Controller
     public function dashboard()
     {
         $data['page_title'] = "Dashboard";
+        $data['routes'] = Route::latest()->get();
         return view('admin.dashboard.dashboard',$data);
     }
     public function editProfile()

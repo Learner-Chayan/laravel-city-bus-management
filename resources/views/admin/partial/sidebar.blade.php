@@ -5,7 +5,6 @@
             <li class="nav-label">Dashboard</li>
             <li><a class="{{Request::is('dashboard') ? 'active' : ''}}" href="{{route('dashboard')}}"><i class="icon-speedometer"></i><span class="nav-text">Dashboard</span></a></li>
             @role('customer')
-            <li><a class="{{Request::is('dashboard') ? 'active' : ''}}" href="{{route('dashboard')}}"><i class="fa fa-ticket"></i><span class="nav-text">Purchase Ticket</span></a></li>
             <li><a class="{{Request::is('dashboard') ? 'active' : ''}}" href="{{route('dashboard')}}"><i class="fa fa-ticket"></i><span class="nav-text">Purchase History</span></a></li>
             @endrole
             @role('admin')

@@ -72,3 +72,13 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function () {
 
 
 });
+Route::get('/stoppage-get',function (){
+    $routeId = \Illuminate\Support\Facades\Request::get('route_id');
+    $route = \App\Models\Route::findOrFail($routeId);
+    $stoppageIds = json_decode($route->stoppage_id);
+    $stoppage = [];
+    foreach ($stoppageIds as $stop){
+        $stoppage[] = \App\Models\Stopage::findOrFail($stop);
+    }
+    return $stoppage;
+});

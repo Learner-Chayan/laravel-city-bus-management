@@ -59,8 +59,25 @@
                     <div class="basic-form">
                         {!! Form::open(['route'=>['sliders.store'],'method'=>'post','files' => true]) !!}
                         <div class="form-group">
-                            <label class="text-bold text-uppercase">Slider Title</label>
-                            <input type="text" class="form-control"  name="title" value="{{old('title')}}" required placeholder="Slider Title">
+                            <label class="text-bold text-uppercase">Select Route</label>
+                            <select name="route_id" id="route_id" class="select2" required style="width: 100%">
+                                <option value="">Select One</option>
+                                @foreach($routes as $route)
+                                    <option value="{{$route->id}}">{{$route->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group" id="fromStoppage" style="display: none">
+                            <label class="text-bold text-uppercase">From</label>
+                            <select name="from_id" id="from_id" class="select2" required style="width: 100%">
+
+                            </select>
+                        </div>
+                        <div class="form-group" id="toStoppage" style="display: none">
+                            <label class="text-bold text-uppercase">To</label>
+                            <select name="to_id" id="to_id" class="select2" required style="width: 100%">
+
+                            </select>
                         </div>
                         <button type="submit" class="btn btn-dark btn-block icon-paper-plane"> Purchase</button>
                         {!! Form::close() !!}
@@ -96,3 +113,25 @@
     @endrole
 
 @endsection
+@push('js')
+    <script>
+        $('#route_id').on('change',function (e){
+            let routeId = e.target.value;
+            let url = '{{url('/')}}';
+            $.get(url + '/stoppage-get?route_id=' + routeId,function (data){
+                let formId = $('#from_id').empty();
+                let toId = $('#to_id').empty();
+
+                formId.append('<option class="bold" value="">Select One</option>');
+                toId.append('<option class="bold" value="">Select One</option>');
+                document.getElementById('fromStoppage').style.display = 'block';
+                document.getElementById('toStoppage').style.display = 'block';
+
+                $.each(data, function (index,stoppageObj){
+                    formId.append('<option value="'+ stoppageObj.id +'">'+ stoppageObj.name +'</option>')
+                    toId.append('<option value="'+ stoppageObj.id +'">'+ stoppageObj.name +'</option>')
+                })
+            })
+        })
+    </script>
+@endpush
