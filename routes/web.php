@@ -50,6 +50,7 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function () {
     Route::resource('socials','Controllers\SocialController');
     Route::resource('faqs','Controllers\FaqController');
     Route::resource('stoppage','StopageController');
+    Route::resource('trip','TripController');
     Route::resource('owner','OwnerController');
     Route::post('owner-update', ['as' => 'owner-update', 'uses' => 'OwnerController@update']);
 

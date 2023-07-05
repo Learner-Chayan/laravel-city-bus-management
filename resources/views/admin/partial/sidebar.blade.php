@@ -12,6 +12,7 @@
             <li><a class="{{Request::is('admin/route') ? 'active' : ''}}" href="{{route('route.index')}}"><i class="icon-star"></i><span class="nav-text">Route</span></a></li>
             <li><a class="{{Request::is('admin/fare') ? 'active' : ''}}" href="{{route('fare.index')}}"><i class="icon-star"></i><span class="nav-text">Fare Calculation</span></a></li>
             <li><a class="{{Request::is('admin/stoppage') ? 'active' : ''}}" href="{{route('stoppage.index')}}"><i class="icon-star"></i><span class="nav-text">Stoppage</span></a></li>
+            <li><a class="{{Request::is('admin/trip') ? 'active' : ''}}" href="{{route('trip.index')}}"><i class="icon-star"></i><span class="nav-text">Trip</span></a></li>
             <li><a class="{{Request::is('admin/owner') ? 'active' : ''}}" href="{{route('owner.index')}}"><i class="icon-user-follow"></i><span class="nav-text">Bus Owner</span></a></li>
             <li><a class="{{Request::is('admin/customer') ? 'active' : ''}}" href="{{route('customer.index')}}"><i class="icon-user-unfollow"></i><span class="nav-text">Customer</span></a></li>
             <li class="{{Request::is('admin/driver') ? 'active' : ''}}">
