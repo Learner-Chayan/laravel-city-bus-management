@@ -17,6 +17,7 @@
                                 <th class="text-bold text-uppercase">End Time</th>
                                 <th class="text-bold text-uppercase">Route</th>
                                 <th class="text-bold text-uppercase">Bus</th>
+                                <th class="text-bold text-uppercase">Seat</th>
                                 <th class="text-bold text-uppercase">Driver</th>
                                 <th class="text-bold text-uppercase">Cotacter</th>
                                 <th class="text-bold text-uppercase">Helper</th>
@@ -31,6 +32,7 @@
                                     <td>{{ $trip->end_time }}</td>
                                     <td>{{ $routesArr[$trip->route] }}</td>
                                     <td>{{ $busesArr[$trip->bus] }}</td>
+                                    <td>{{ $trip->total_seat }}</td>
                                     <td>{{ $trip->driver }}</td>
                                     <td>{{ $trip->contacter }}</td>
                                     <td>{{ $trip->helper }}</td>
@@ -122,12 +124,17 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="bus" class="col-form-label">Bus :</label>
-                                    <select class="form-control" id="bus" name="bus">
+                                    <select class="form-control" id="bus" name="bus" onchange="busSelected({{ $buses }})">
                                         <option value="">Select One</option>
                                         @foreach($buses as $bus)
                                             <option value="{{$bus->id}}">{{$bus->name}}</option>
                                         @endforeach
                                     </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="total_seat" class="col-form-label">Total Seat:</label>
+                                    <input type="text" readonly class="form-control" id="total_seat" name="total_seat">
+
                                     <p class="text-danger" id="error"></p>
                                     <p class="text-success" id="success"></p>
                                 </div>
@@ -192,12 +199,17 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="edit_bus" class="col-form-label">Bus :</label>
-                                    <select class="form-control" id="edit_bus" name="bus">
+                                    <select class="form-control" id="edit_bus" name="bus" onchange="editBusSelected({{ $buses }})">
                                         <option value="">Select One</option>
                                         @foreach($buses as $bus)
                                             <option value="{{$bus->id}}">{{$bus->name}}</option>
                                         @endforeach
                                     </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit_total_seat" class="col-form-label">Total Seat:</label>
+                                    <input type="text" readonly class="form-control" id="edit_total_seat" name="total_seat">
+
                                     <p class="text-danger" id="error"></p>
                                     <p class="text-success" id="success"></p>
                                 </div>
@@ -280,6 +292,7 @@
                 let helper =  $("#edit_helper").val();
                 let contacter =  $("#edit_contacter").val();
                 let bus =  $("#edit_bus").val();
+                let total_seat =  $("#edit_total_seat").val();
 
                 $.ajaxSetup({
                     headers: {
@@ -300,6 +313,7 @@
                         "helper":helper,
                         "contacter":contacter,
                         "bus":bus,
+                        "total_seat":total_seat,
                     },
 
                     success:function(res){
@@ -319,6 +333,31 @@
 
         });
 
+
+        function busSelected(buses){
+            //console.log(buses);
+            let busId = $("#bus").val();
+            for (let i = 0; i < buses.length; i++) {
+                if(buses[i].id == busId){
+                    $("#total_seat").val(buses[i].seat_number);
+                    break;
+                }
+                
+            }
+        }
+
+        function editBusSelected(buses){
+            //console.log(buses);
+            let busId = $("#edit_bus").val();
+            for (let i = 0; i < buses.length; i++) {
+                if(buses[i].id == busId){
+                    $("#edit_total_seat").val(buses[i].seat_number);
+                    break;
+                }
+                
+            }
+        }
+
         function showFormData(data){
             console.log(data);
 
@@ -330,6 +369,7 @@
             $("#edit_helper").val(data.helper);
             $("#edit_contacter").val(data.contacter);
             $("#edit_bus").val(data.bus);
+            $("#edit_total_seat").val(data.total_seat);
         }
     </script>
 @endpush

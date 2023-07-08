@@ -35,6 +35,7 @@ class TripController extends Controller
             'helper' => 'required',
             'contacter' => 'required',
             'bus' => 'required',
+            'total_seat' => 'required'
         ]);
 
         if(!$valid){
@@ -49,7 +50,8 @@ class TripController extends Controller
             'driver' => $request->driver,
             'helper' => $request->helper,
             'contacter' => $request->contacter,
-            'bus' => $request->bus
+            'bus' => $request->bus,
+            'total_seat' => $request->total_seat
         ]);
         return response()->json();
     }
@@ -63,6 +65,7 @@ class TripController extends Controller
             'helper' => 'required',
             'contacter' => 'required',
             'bus' => 'required',
+            'total_seat' => 'required'
         ]);
 
         if(!$valid){

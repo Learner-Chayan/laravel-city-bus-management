@@ -109,7 +109,7 @@
                         </div>
                         <div class="form-group">
                             <label for="bus-name" class="col-form-label">Reg Last Date:</label>
-                            <input type="text" class="form-control" id="reg-last-date" name="reg_last_date">
+                            <input type="date" class="form-control" id="reg-last-date" name="reg_last_date">
                         </div>
                         <div class="form-group">
                             <label for="bus-name" class="col-form-label">Reg Image:</label>
@@ -162,7 +162,7 @@
                         </div>
                         <div class="form-group">
                             <label for="bus-name" class="col-form-label">Reg Last Date:</label>
-                            <input type="text" class="form-control" id="edit-reg-last-date" name="reg_last_date">
+                            <input type="date" class="form-control" id="edit-reg-last-date" name="reg_last_date">
 
                         </div>
                         <div class="form-group">
@@ -218,7 +218,7 @@
                     success:function(res){
                         console.log(res);
                         toastr.success("Inserted Successfully !!");
-                        // reload();
+                         reload();
                     },
                     error:function(err){
                         console.log(err);

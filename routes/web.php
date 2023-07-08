@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\FareController;
+use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -72,7 +73,19 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function () {
     Route::post('/fare', [FareController::class, 'pricing'])->name('fare.update');
 
 
+    //ticket 
+    Route::get('/ticket',[TicketController::class, 'index'])->name('ticket');
+    Route::post('/search-trip',[TicketController::class, 'searchTrip'])->name('search.trip');
+    Route::post('/ticket-confirmation', [TicketController::class, 'ticketConfirmation'])->name('ticket.confirm');
+    Route::get('/purchase-history',[TicketController::class , 'purchaseHistory'])->name('purchase.history');
 });
+
+//tickets
+// Route::group(['prefix'=>'ticket'],function(){
+//     Route::get('/',[TicketController::class, 'index'])->name('ticket');
+// });
+
+
 Route::get('/stoppage-get',function (){
     $routeId = \Illuminate\Support\Facades\Request::get('route_id');
     $route = \App\Models\Route::findOrFail($routeId);

@@ -65,7 +65,9 @@
 
                                                     <input class="form-control" type="text" name="fare_{{$selected_route->id}}_{{$stoppage}}_{{$stoppage2}}"
                                                    @if($stoppage == $stoppage2) value="0" readonly
-                                                    @else(count($price_arr)) value="{{ $price_arr['fare_'.$selected_route->id.'_'.$stoppage.'_'.$stoppage2] }}" @endif
+                                                    @else(count($price_arr))
+                                                     value="<?php echo  $price_arr ? $price_arr['fare_'.$selected_route->id.'_'.$stoppage.'_'.$stoppage2] : '' ?>"
+                                                      @endif
 
                                                     >
                                                 </td>

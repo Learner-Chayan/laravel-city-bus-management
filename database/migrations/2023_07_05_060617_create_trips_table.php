@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('helper'); // change it integer later
             $table->string('contacter'); // change it integer later
             $table->integer('bus'); 
+            $table->integer('total_seat'); 
             $table->timestamps();
         });
     }
