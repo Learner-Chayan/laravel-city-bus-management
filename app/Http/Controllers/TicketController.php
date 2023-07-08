@@ -7,6 +7,7 @@ use App\Models\Route;
 use App\Models\Trip;
 use App\Models\Fare;
 use App\Models\Bus;
+use App\Models\Ticket_sale;
 use Illuminate\Http\Request;
 //use Carbon\Carbon;
 
@@ -30,10 +31,10 @@ class TicketController extends Controller
     public function searchTrip(Request $request){
 
         //dd($request);
+        $page_title = "Trip List";
         $route_id = $this->getRoute($request->from,$request->to);
 
         if($route_id){
-            echo "Route found : ".$route_id;
             //get trip info
 
             $now = date("Y-m-d H:i:s");
@@ -47,21 +48,13 @@ class TicketController extends Controller
                 //get fare amount
                 $fare_amount = $this->getFare($request->from,$request->to,$route_id);
                 if($fare_amount){
-                    echo $fare_amount;
-                    // now show all trips with fare amount 
-                    foreach ($trips as $trip ) {
-                        echo "<br/>";
-                       echo "Start time :".$trip->start_time;
-                       echo "<br/>";
-                       echo "End Time :".$trip->end_time;
-                       echo "<br/>";
-                       echo "Bus name :".$this->getBusName($trip->bus);
-                       echo "<br/>";
-                       echo "available seat :".$trip->total_seat;
-                       echo "<br/>";
-                       echo "Fare amount :".$fare_amount;
-                       echo "<br/>";
-                    }
+                    $from_id = $request->from;
+                    $to_id = $request->to;
+                    $from = Stopage::select('name')->where('id',$request->from)->first()->name;
+                    $to = Stopage::select('name')->where('id',$request->to)->first()->name;
+                    $buses = Bus::all();
+                    return view('admin.ticket.trip-search',compact('page_title','trips', 'fare_amount','from',
+                    'to','buses','from_id','to_id'));
                 }else{
                     echo "Fare is not calculated yet";
                 }
@@ -117,14 +110,74 @@ class TicketController extends Controller
         return null;
     }
 
-    public function getBusName($id){
-        $buses = Bus::all();
-        foreach ($buses as $bus) {
-            if($bus->id == $id){
-                return $bus->name;
-            }
+    // public function getBusName($id){
+    //     $buses = Bus::all();
+    //     foreach ($buses as $bus) {
+    //         if($bus->id == $id){
+    //             return $bus->name;
+    //         }
+    //     }
+
+    //     return '';
+    // }
+
+
+    public function ticketConfirmation(Request $request){
+
+        $request->validate([
+            'totalTicket' => 'required'
+        ]);
+
+        $trip = Trip::where('id',$request->trip_id)->first();
+
+        if($trip->total_seat < $request->totalTicket){
+            echo "Requested seat is not available !!";
+            dd(1);
         }
 
-        return '';
+        $fare_amount_total = $request->totalTicket * $request->fare_amount; 
+        $user = auth()->user();
+
+        //create ticket
+        $ticket_sales = Ticket_sale::create([
+            "issued_by"=> $user->id,
+            "trip_id"=> $trip->id,
+            "from"=> $request->from_id,
+            "to"=> $request->to_id,
+            "fare_amount"=> $fare_amount_total,
+            "total_seat"=> $request->totalTicket
+        ]);
+
+
+        // now reduce available seat
+        $trip->update([
+            'total_seat' => $trip->total_seat - $request->totalTicket
+        ]);
+       
+        
+
+        dd($ticket_sales);
+        dd($request);
+        dd($fare_amount_total);
+
+    }
+
+    public function purchaseHistory(){
+        $user = auth()->user();
+        $ticket_sales = Ticket_sale::where('issued_by',$user->id)->get();
+        $page_title = "Purchase History";
+
+        for($i=0; count($ticket_sales)>$i; $i++) {
+            $trip_info = Trip::where('id',$ticket_sales[$i]->trip_id)->first();
+            $ticket_sales[$i]->trip_info = $trip_info;
+
+            //stoppage name
+            $ticket_sales[$i]->from = Stopage::where('id',$ticket_sales[$i]->from)->first()->name;
+            $ticket_sales[$i]->to = Stopage::where('id',$ticket_sales[$i]->to)->first()->name;
+        }
+
+        //dd($ticket_sales);
+
+        return view('admin.purchase-history.index',compact('ticket_sales','page_title'));
     }
 }

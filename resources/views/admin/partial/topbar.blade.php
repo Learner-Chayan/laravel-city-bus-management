@@ -41,6 +41,9 @@
                                 <li>
                                     <a href="{{route('edit-profile')}}"><i class="icon-user"></i> <span>Profile</span></a>
                                 </li>
+                                <li>
+                                    <a href="{{route('purchase.history')}}"><i class="icon-user"></i> <span>Purchase History </span></a>
+                                </li>
                                 <hr class="my-2">
                                 <li>
                                     <a href="{{route('password')}}"><i class="icon-lock"></i> <span>Change Password</span></a>
