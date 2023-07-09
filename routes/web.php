@@ -75,7 +75,7 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function () {
 
     //ticket 
     Route::get('/ticket',[TicketController::class, 'index'])->name('ticket');
-    Route::post('/search-trip',[TicketController::class, 'searchTrip'])->name('search.trip');
+    Route::get('/search-trip',[TicketController::class, 'searchTrip'])->name('search.trip');
     Route::post('/ticket-confirmation', [TicketController::class, 'ticketConfirmation'])->name('ticket.confirm');
     Route::get('/purchase-history',[TicketController::class , 'purchaseHistory'])->name('purchase.history');
 });

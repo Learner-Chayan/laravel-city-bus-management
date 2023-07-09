@@ -34,6 +34,7 @@ class TicketController extends Controller
         $page_title = "Trip List";
         $route_id = $this->getRoute($request->from,$request->to);
 
+
         if($route_id){
             //get trip info
 
@@ -56,14 +57,14 @@ class TicketController extends Controller
                     return view('admin.ticket.trip-search',compact('page_title','trips', 'fare_amount','from',
                     'to','buses','from_id','to_id'));
                 }else{
-                    echo "Fare is not calculated yet";
+                    return redirect()->back()->with("error",'Fare is not calculated yet !');
                 }
 
             }else{
-                echo "Trip not found";
+                return redirect()->back()->with("error",'Trip not found !');
             }
         }else{
-            echo "Route not found";
+            return redirect()->back()->with("error",'Route not found !');
         }
     }
 
