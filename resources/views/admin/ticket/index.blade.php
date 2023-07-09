@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">{{$page_title}}</h4>
-                    <form action="{{route('search.trip')}}" method="POST">
+                    <form action="{{route('search.trip')}}" method="GET">
                         @csrf
                         <div class="row">
                                 <div class="col-5">
