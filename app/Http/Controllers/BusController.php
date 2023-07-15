@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Bus;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
 
@@ -17,7 +18,15 @@ class BusController extends Controller
     public function index()
     {
         $data['page_title'] = "Bus List";
-        $data['buses'] = Bus::with('owner')->latest()->get();
+        $user = Auth::user();
+        if ($user->hasRole('admin'))
+        {
+            $data['buses'] = Bus::with('owner')->latest()->get();
+
+        }else{
+            $data['buses'] = Bus::with('owner')->where('owner_id',$user->id)->latest()->get();
+
+        }
         $data['owners'] = User::where('customer_type',2)->latest()->get();
         return view('admin.bus.index',$data);
     }
@@ -43,6 +52,7 @@ class BusController extends Controller
         $valid =  $this->validate($request,[
             'name' => 'required|string|unique:buses,name',
             'reg_number' => 'required|string|unique:buses,reg_number',
+            'coach_number' => 'required|numeric|unique:buses,coach_number',
             'reg_last_date' => 'required|string',
             'owner_id' => 'required',
             'seat_number' => 'required|numeric',
@@ -104,6 +114,8 @@ class BusController extends Controller
                 'reg_last_date' => 'required|string',
                 'seat_number' => 'required|numeric',
                 'owner_id' => 'required',
+                'coach_number' => 'required|numeric|unique:buses,coach_number,'.$bus->id,
+
 
             ]);
 

@@ -51,12 +51,21 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function () {
     Route::resource('socials','Controllers\SocialController');
     Route::resource('faqs','Controllers\FaqController');
     Route::resource('stoppage','StopageController');
-    Route::resource('trip','TripController');
     Route::resource('owner','OwnerController');
     Route::post('owner-update', ['as' => 'owner-update', 'uses' => 'OwnerController@update']);
 
     Route::resource('driver','DriverController');
     Route::post('driver-update', ['as' => 'driver-update', 'uses' => 'DriverController@update']);
+
+    Route::resource('trip','TripController');
+
+    Route::post('trip-update', ['as' => 'trip-update', 'uses' => 'TripController@update']);
+
+    Route::resource('ticket-checker','TicketCheckerController');
+    Route::post('ticket-checker-update', ['as' => 'ticket-checker-update', 'uses' => 'TicketCheckerController@update']);
+
+    Route::resource('helper','HelperController');
+    Route::post('helper-update', ['as' => 'helper-update', 'uses' => 'HelperController@update']);
 
     Route::resource('customer','CustomerController');
     Route::post('customer-update', ['as' => 'customer-update', 'uses' => 'CustomerController@update']);
@@ -73,11 +82,15 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function () {
     Route::post('/fare', [FareController::class, 'pricing'])->name('fare.update');
 
 
-    //ticket 
+    //ticket
     Route::get('/ticket',[TicketController::class, 'index'])->name('ticket');
+    Route::get('/ticket-pdf/{id}',[TicketController::class, 'ticketPdf'])->name('ticket-pdf');
     Route::get('/search-trip',[TicketController::class, 'searchTrip'])->name('search.trip');
     Route::post('/ticket-confirmation', [TicketController::class, 'ticketConfirmation'])->name('ticket.confirm');
     Route::get('/purchase-history',[TicketController::class , 'purchaseHistory'])->name('purchase.history');
+
+    //serve ticket - conductor
+    Route::get('/serve-ticket/{route}',[TicketController::class, 'ticketOptions'])->name('serve.ticket');
 });
 
 //tickets
@@ -95,4 +108,24 @@ Route::get('/stoppage-get',function (){
         $stoppage[] = \App\Models\Stopage::findOrFail($stop);
     }
     return $stoppage;
+});
+Route::get('/get-owner-employee',function (){
+    $ownerId = \Illuminate\Support\Facades\Request::get('owner_id');
+    $employees = \App\Models\UserDetails::where('owner_id',$ownerId)->get();
+    $bus = \App\Models\Bus::where('owner_id',$ownerId)->get();
+
+    $driver = [];
+    $checker = [];
+    $helper = [];
+    foreach ($employees as $employee){
+        $em = \App\User::findOrFail($employee->user_id);
+        if ($em->customer_type == 3){
+            $driver[] = $em;
+        }elseif ($em->customer_type == 4){
+            $checker[] = $em;
+        }else{
+            $helper[] = $em;
+        }
+    }
+    return Response::json(['bus'=> $bus,'driver' => $driver, 'checker' => $checker, 'helper' => $helper]);
 });

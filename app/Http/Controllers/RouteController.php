@@ -22,7 +22,7 @@ class RouteController extends Controller
     {
         $data['page_title'] = "Route List";
         $data['routes'] = Route::latest()->get();
-        $data['stoppages'] = Stopage::where('status',1)->latest()->get();
+        $data['stoppages'] = Stopage::where('status',1)->get();
         return view('admin.route.index',$data);
     }
 

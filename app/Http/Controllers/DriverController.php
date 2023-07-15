@@ -6,6 +6,7 @@ use App\Models\Owner;
 use App\Models\UserDetails;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
@@ -20,8 +21,21 @@ class DriverController extends Controller
     public function index()
     {
         $data['page_title'] = "Driver List";
-        $data['drivers'] = User::where('customer_type',3)->latest()->get();//driver
+        $user = Auth::user();
         $data['owners'] = User::where('customer_type',2)->latest()->get();//owner
+        if ($user->hasRole('admin')){
+            $data['drivers'] = User::where('customer_type',3)->latest()->get();//driver
+        }else{
+            $drivers = [];
+            $userDetails = \App\Models\UserDetails::where('owner_id',$user->id)->get();
+            foreach ($userDetails as $em){
+                $employee = User::findOrFail($em->user_id);
+                if ($employee->customer_type == 3){
+                    $drivers[] = $employee;
+                }
+            }
+            $data['drivers'] = $drivers;
+        }
         return view('admin.driver.index',$data);
     }
 
@@ -54,7 +68,7 @@ class DriverController extends Controller
         }
 
         $user = User::create($in);
-        $role = Role::where('name','owner')->first();
+        $role = Role::where('name','driver')->first();
         $user->roles()->attach($role);
 
         //user details

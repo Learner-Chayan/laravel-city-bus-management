@@ -21,6 +21,10 @@ return new class extends Migration
             $table->integer('to');
             $table->integer('fare_amount');
             $table->integer('total_seat');
+            $table->string('transaction_id')->nullable();
+            $table->string('serial')->unique();
+            $table->string('status');
+            $table->string('payment_by');
             $table->timestamps();
         });
     }

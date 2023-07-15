@@ -8,14 +8,14 @@
                 <div class="card-body">
                     <h4 class="card-title">{{$page_title}}</h4>
                     <hr/>
-                           
+
                             <div class="row">
                                 <div class="col-4">
-                                    <h5 class="text-right"> 
+                                    <h5 class="text-right">
                                         <span id="from">
                                             {{$from}}
                                         </span>
-                                    </h5> 
+                                    </h5>
                                 </div>
                                 <div class="col-3"> <p style="border:2px dotted #ddd;margin-top:9px"></p> </div>
                                 <div class="col-4">
@@ -26,16 +26,16 @@
                             @foreach($trips as $trip)
                             <div class="row border p-4">
                                 <div class="clo-6">
-                                    <h6> Bus : </i> 
+                                    <h6> Bus : {{$trip->bus->name}}</i>
 
-                                        @php 
-                                            foreach($buses as $bus){
-                                                if($trip->bus == $bus->id){
-                                                    echo $bus->name;
-                                                }
-                                            }
+{{--                                        @php --}}
+{{--                                            foreach($buses as $bus){--}}
+{{--                                                if($trip->bus == $bus->id){--}}
+{{--                                                    echo $bus->name;--}}
+{{--                                                }--}}
+{{--                                            }--}}
 
-                                        @endphp
+{{--                                        @endphp--}}
                                     </h6>
                                     <p>Trip Start : {{ $trip->start_time }}</p>
                                 </div>
@@ -107,10 +107,10 @@
 
 @endsection
 
-@push('js') 
+@push('js')
         <script>
             function showTicketModal(trip_id){
-          
+
 
                 $("#show_from").text($("#from").text());
                 $("#show_to").text($("#to").text());

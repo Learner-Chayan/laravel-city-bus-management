@@ -16,13 +16,15 @@ return new class extends Migration
         Schema::create('trips', function (Blueprint $table) {
             $table->id();
             $table->string('start_time');
-            $table->string('end_time')->nullable;
+            $table->string('end_time')->nullable();
             $table->integer('route');
-            $table->string('driver'); // change it integer later
-            $table->string('helper'); // change it integer later
-            $table->string('contacter'); // change it integer later
-            $table->integer('bus'); 
-            $table->integer('total_seat'); 
+            $table->integer('owner_id');
+            $table->integer('driver_id'); // change it integer later
+            $table->integer('helper_id'); // change it integer later
+            $table->integer('checker_id'); // change it integer later
+            $table->integer('bus_id');
+            $table->integer('total_seat');
+            $table->string('type');
             $table->timestamps();
         });
     }

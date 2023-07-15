@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Trip;
 use App\Models\Route;
 use App\Models\Bus;
+use App\Models\UserDetails;
+use App\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class TripController extends Controller
 {
@@ -16,14 +19,41 @@ class TripController extends Controller
 
     public function index(){
         $data['page_title'] = "Trip List";
-        $data['trips'] = Trip::latest()->get();
+        $user = Auth::user();
+        if ($user->hasRole('admin')){
+            $data['trips'] = Trip::with('bus','driver','helper','checker')->latest()->get();
+        }else{
+            $data['trips'] = Trip::with('bus','driver','helper','checker')->where('owner_id',$user->id)->latest()->get();
+
+        }
         $data['routes'] = Route::latest()->get();
         $data['routesArr'] = $this->getRoutes();
         $data['busesArr'] = $this->getBuses();
         $data['buses'] = Bus::latest()->get();
+        $data['drivers'] = User::latest()->where('customer_type',3)->get();
+        $data['checkers'] = User::latest()->where('customer_type',4)->get();
+        $data['helpers'] = User::latest()->where('customer_type',6)->get();
 
         //dd($data['routes'][1]);
         return view('admin.trip.index',$data);
+    }
+    public function create(){
+        $data['page_title'] = "Trip Create";
+        $data['routes'] = Route::latest()->get();
+        $data['buses'] = Bus::latest()->get();
+        $user = Auth::user();
+        if ($user->hasRole('admin')){
+            $data['owners'] = User::latest()->where('customer_type',2)->get(); //owner
+        }else{
+            $data['owners'] = User::latest()->where('customer_type',2)->where('id','=',$user->id)->get(); //owner
+
+        }
+        $data['drivers'] = User::latest()->where('customer_type',3)->get();//driver
+        $data['checkers'] = User::latest()->where('customer_type',4)->get();//checker
+        $data['helpers'] = User::latest()->where('customer_type',6)->get();// helper
+
+        //dd($data['routes'][1]);
+        return view('admin.trip.create',$data);
     }
 
     public function store( Request $request){
@@ -31,11 +61,13 @@ class TripController extends Controller
         $valid = $request->validate([
             'start_time' => 'required',
             'route' => 'required',
-            'driver' => 'required',
-            'helper' => 'required',
-            'contacter' => 'required',
-            'bus' => 'required',
-            'total_seat' => 'required'
+            'driver_id' => 'required',
+            'helper_id' => 'required',
+            'checker_id' => 'required',
+            'bus_id' => 'required',
+            'total_seat' => 'required',
+            'trip_type' => 'required',
+            'owner_id' => 'required'
         ]);
 
         if(!$valid){
@@ -47,25 +79,63 @@ class TripController extends Controller
             'start_time' => Carbon::parse($request->start_time)->format('Y-m-d H:i:s'),
             'end_time' =>  Carbon::parse($request->end_time)->format('Y-m-d H:i:s'),
             'route' => $request->route,
-            'driver' => $request->driver,
-            'helper' => $request->helper,
-            'contacter' => $request->contacter,
-            'bus' => $request->bus,
-            'total_seat' => $request->total_seat
+            'driver_id' => $request->driver_id,
+            'helper_id' => $request->helper_id,
+            'checker_id' => $request->checker_id,
+            'bus_id' => $request->bus_id,
+            'total_seat' => $request->total_seat,
+            'trip_type' => $request->trip_type,
+            'owner_id' => $request->owner_id,
         ]);
-        return response()->json();
+        session()->flash('message','Trip Created successfully !!');
+        return redirect()->route('trip.index');
     }
 
-    public function update(Request $request,$id){
+    public function edit($id)
+    {
+        $data['page_title'] = "Trip Edit";
+        $data['trip'] = Trip::with('driver','bus','helper','checker')->findOrFail($id);
+        $data['buses'] = Bus::where('owner_id',$data['trip']->owner_id)->latest()->get();
+        $user = Auth::user();
+        if ($user->hasRole('admin')){
+            $data['owners'] = User::latest()->where('customer_type',2)->get(); //owner
+        }else{
+            $data['owners'] = User::latest()->where('customer_type',2)->where('id','=',$user->id)->get(); //owner
+
+        }
+        $employees = UserDetails::where('owner_id',$data['trip']->owner_id)->get();
+        $driver = [];
+        $checker = [];
+        $helper = [];
+        foreach ($employees as $employee){
+            $em = \App\User::findOrFail($employee->user_id);
+            if ($em->customer_type == 3){
+                $driver[] = $em;
+            }elseif ($em->customer_type == 4){
+                $checker[] = $em;
+            }else{
+                $helper[] = $em;
+            }
+        }
+        $data['drivers'] = $driver;
+        $data['checkers'] = $checker;
+        $data['helpers'] = $helper;
+        $data['routes'] = Route::latest()->get();
+        return view('admin.trip.edit',$data);
+
+
+    }
+    public function update(Request $request){
 
         $valid = $request->validate([
             'start_time' => 'required',
-            'route' => 'required',
-            'driver' => 'required',
-            'helper' => 'required',
-            'contacter' => 'required',
-            'bus' => 'required',
-            'total_seat' => 'required'
+            'driver_id' => 'required',
+            'helper_id' => 'required',
+            'checker_id' => 'required',
+            'bus_id' => 'required',
+            'total_seat' => 'required',
+            'trip_type' => 'required',
+            'owner_id' => 'required'
         ]);
 
         if(!$valid){
@@ -78,15 +148,16 @@ class TripController extends Controller
         $in['end_time'] =  Carbon::parse($request->end_time)->format('Y-m-d H:i:s');
 
         $trip->fill($in)->save();
-        return response()->json();
+        session()->flash('message','Trip Update successfully !!');
+        return redirect()->route('trip.index');
 
     }
 
-    
+
     public function destroy($id){
         $trip = Trip::findOrFail($id);
         $trip->delete();
-        
+
         session()->flash('message','Trip deleted successfully !!');
         return redirect()->back();
     }
@@ -108,6 +179,7 @@ class TripController extends Controller
         $busesArr = [];
         foreach($buses as $bus){
             $busesArr[$bus->id] = $bus->name;
+            $busesArr[$bus->coach_number] = $bus->coach_number;
         }
 
         return $busesArr;
