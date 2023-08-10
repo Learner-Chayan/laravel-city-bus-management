@@ -244,7 +244,8 @@ class TicketController extends Controller
         $trip = Trip::findOrFail($trip_id);
         $stoppages = Stopage::latest()->get();
         $route = Route::findOrFail($trip->route);
-        $fares = Fare::
+        $fares = Fare::where('route_id',$route->id)->first();
+       // dd($fares);
 
         $stoppage_details = [];
         foreach($stoppages as $stoppage){
@@ -253,6 +254,7 @@ class TicketController extends Controller
 
         $data['page_title'] = "Serve Ticket";
         $data['trip'] = $trip;
+        $data['fares'] = $fares;
         $data['route'] = $route;
         $data['stoppage_details'] = $stoppage_details;
 

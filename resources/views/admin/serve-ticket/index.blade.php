@@ -52,13 +52,13 @@ label{
                                 @foreach(json_decode($route->stoppage_id) as $stoppage)
 
                                     <div class="col-5">
-                                       <label><input type="radio" class="radio" name="from" id="from{{$stoppage}}">
-                                         {{ $stoppage_details[$stoppage] }} </label for="from{{$stoppage}}">
+                                       <label for="from{{$stoppage}}" onclick="calculateFare()"><input type="radio" class="radio" name="from" id="from{{$stoppage}}" value="{{$stoppage}}">
+                                         {{ $stoppage_details[$stoppage] }} </label >
                                     </div>
                                 @endforeach
                                 </div>
                             </ul>
-                            
+
                         </div>
                         <div class="col-6">
                             <h3>To : </h3>
@@ -69,8 +69,8 @@ label{
                                 @foreach(json_decode($route->stoppage_id) as $stoppage)
 
                                     <div class="col-5">
-                                       <label><input type="radio" class="radio" name="to" id="to{{$stoppage}}">
-                                         {{ $stoppage_details[$stoppage] }} </label for="to{{$stoppage}}">
+                                       <label for="to{{$stoppage}}" onclick="calculateFare()"><input type="radio" class="radio" name="to" id="to{{$stoppage}}" value="{{$stoppage}}">
+                                         {{ $stoppage_details[$stoppage] }} </label>
                                     </div>
                                 @endforeach
                                 </div>
@@ -80,7 +80,7 @@ label{
                     <hr/>
                     <div class="row">
                         <div class="col-12">
-                             <h3>Fare amount : 20 BDT </h3>
+                            <h3>Fare amount : <span id="fare_amount"></span> BDT </h3>
                         </div>
                     </div>
                 </div>
@@ -91,5 +91,23 @@ label{
 
 
 @endsection
+
+@push('js')
+    <script>
+        calculateFare();
+        function calculateFare(){
+
+            let from = $("input[name=from]:checked").val();
+            let to = $("input[name=to]:checked").val();
+
+            let fares = {!!  $fares->price !!} ;
+            let route = {!!  $route->id !!} ;
+            console.log(fares["fare_"+route+"_"+from+"_"+to]);
+
+            $("#fare_amount").text(fares["fare_"+route+"_"+from+"_"+to]);
+
+        }
+    </script>
+@endpush
 
 
