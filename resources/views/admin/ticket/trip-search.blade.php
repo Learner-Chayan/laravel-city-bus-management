@@ -55,7 +55,9 @@
 
 <div class="modal fade" id="ticketModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <form action="{{route('ticket.confirm')}}" method="POST">
+{{--            <form action="{{route('ticket.confirm')}}" method="POST">--}}
+            <form action="{{ route('url-create') }}" method="POST">
+
                 @csrf
                 <div class="modal-content" >
                     <div class="modal-header bg-orange-active text-center">

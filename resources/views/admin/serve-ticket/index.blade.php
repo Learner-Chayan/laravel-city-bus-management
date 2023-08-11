@@ -79,10 +79,40 @@ label{
                     </div>
                     <hr/>
                     <div class="row">
-                        <div class="col-12">
-                            <h3>Fare amount : <span id="fare_amount"></span> BDT </h3>
+                        <div class="col-6">
+                            <div class="row">
+                                <div class="col-3">
+                                   <h3> Is Student ? </h3>
+                                </div>
+                                <div class="col-4">
+                                    <input onclick="calculateFare()" type="checkbox" id="isStudent" name="isStudent" class="form-control">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-6">
+                            <h3> <block></block> Fare amount : <span id="fare_amount_show"></span> BDT </h3>
                         </div>
                     </div>
+                    <hr/>
+                    <form action="{{route('ticket.confirm')}}" method="POST">
+                        <div class="row">
+                            <div class="col-4">
+                                    @csrf
+                                    <input type="hidden" name="totalTicket" id="totalTicket" value="1">
+                                    <input type="hidden" name="trip_id" id="trip_id" value="{{ $trip->id }}">
+                                    <input type="hidden" name="fare_amount" id="fare_amount">
+                                    <input type="hidden" name="from_id" id="from_id">
+                                    <input type="hidden" name="to_id" id="to_id">
+
+
+
+                            </div>
+                            <div class="col-4">
+                                <button class="btn btn-success btn-lg" type="submit">Confirm ticket</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -99,12 +129,27 @@ label{
 
             let from = $("input[name=from]:checked").val();
             let to = $("input[name=to]:checked").val();
+            let isStudent = $("#isStudent").is(":checked");
+
 
             let fares = {!!  $fares->price !!} ;
             let route = {!!  $route->id !!} ;
-            console.log(fares["fare_"+route+"_"+from+"_"+to]);
+            //console.log(isStudent);
 
-            $("#fare_amount").text(fares["fare_"+route+"_"+from+"_"+to]);
+            let fare_amount = fares["fare_"+route+"_"+from+"_"+to];
+
+            if(isStudent){
+                $("#fare_amount_show").text(fare_amount+" (50%) = "+Math.ceil(fare_amount/2));
+                fare_amount = Math.ceil(fare_amount / 2) ;
+            }else{
+                $("#fare_amount_show").text(fare_amount);
+            }
+
+
+            //set form values
+            $("#fare_amount").val(fare_amount);
+            $("#from_id").val(from);
+            $("#to_id").val(to);
 
         }
     </script>

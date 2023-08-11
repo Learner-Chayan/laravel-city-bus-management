@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\FareController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -88,6 +89,10 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function () {
     Route::get('/search-trip',[TicketController::class, 'searchTrip'])->name('search.trip');
     Route::post('/ticket-confirmation', [TicketController::class, 'ticketConfirmation'])->name('ticket.confirm');
     Route::get('/purchase-history',[TicketController::class , 'purchaseHistory'])->name('purchase.history');
+
+    //bkash payment for user
+    Route::post('/bkash/create', [PaymentController::class, 'createPayment'])->name('url-create');
+    Route::get('/bkash/callback', [PaymentController::class, 'callback'])->name('url-callback');
 
     //serve ticket - conductor
     Route::get('/serve-ticket/{route}',[TicketController::class, 'ticketOptions'])->name('serve.ticket');

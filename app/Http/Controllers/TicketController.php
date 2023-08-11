@@ -135,8 +135,8 @@ class TicketController extends Controller
         $trip = Trip::where('id',$request->trip_id)->first();
 
         if($trip->total_seat < $request->totalTicket){
-            echo "Requested seat is not available !!";
-            dd(1);
+            //echo "Requested seat is not available !!";
+            return redirect()->back()->with("error",'Requested seat is not available !!');
         }
 
         $fare_amount_total = $request->totalTicket * $request->fare_amount;
@@ -190,9 +190,9 @@ class TicketController extends Controller
 
         $pdf = PDF::loadView('admin.ticket.ticket', $data)->setPaper('A7', 'landscape');
 
-        return $pdf->download('Ticket-'.$ticket_sales->serial.'.pdf');
+         $pdf->stream('Ticket-'.$ticket_sales->serial.'.pdf');
 
-//        return redirect('admin/purchase-history')->with('success', 'Your ticket purchased successfully!!');
+        return redirect('admin/purchase-history')->with('success', 'Your ticket purchased successfully!!');
 
     }
 
@@ -245,7 +245,7 @@ class TicketController extends Controller
         $stoppages = Stopage::latest()->get();
         $route = Route::findOrFail($trip->route);
         $fares = Fare::where('route_id',$route->id)->first();
-       // dd($fares);
+        //dd($trip);
 
         $stoppage_details = [];
         foreach($stoppages as $stoppage){
@@ -259,5 +259,10 @@ class TicketController extends Controller
         $data['stoppage_details'] = $stoppage_details;
 
         return view('admin.serve-ticket.index', $data);
+    }
+
+
+    public  function  createPayment(){
+
     }
 }
