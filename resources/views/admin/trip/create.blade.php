@@ -72,12 +72,7 @@
                                     <p class="text-success" id="success"></p>
                                 </div>
                                 <div class="form-group">
-                                    <label for="total_seat" class="col-form-label">Trip Type:</label>
-                                    <select class="form-control select2" style="width: 100%" id="trip_type" name="trip_type">
-                                        <option value="">Select One</option>
-                                        <option value="Up">Up</option>
-                                        <option value="Down">Down</option>
-                                    </select>
+                                    <input name="trip_type" type="hidden" value=" ">
                                 </div>
                             </div>
                         </div>

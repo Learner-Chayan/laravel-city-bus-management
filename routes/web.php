@@ -77,7 +77,6 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function () {
     Route::resource('route','RouteController');
     Route::post('route-update', ['as' => 'route-update', 'uses' => 'RouteController@update']);
 
-
     //fare
     Route::get('/fare', [FareController::class, 'index'])->name('fare.index');
     Route::post('/fare', [FareController::class, 'pricing'])->name('fare.update');
@@ -90,8 +89,14 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function () {
     Route::post('/ticket-confirmation', [TicketController::class, 'ticketConfirmation'])->name('ticket.confirm');
     Route::get('/purchase-history',[TicketController::class , 'purchaseHistory'])->name('purchase.history');
 
+    //ticket validation
+    Route::get('/ticketValidation', [TicketController::class, 'ticketValidation'])->name('ticket.validate');
+    Route::get('/checkTicket', [TicketController::class, 'ticketValidation'])->name('ticket.check.back');
+    Route::post('/checkTicket', [TicketController::class, 'checkTicket'])->name('ticket.check');
+
     //bkash payment for user
-    Route::post('/bkash/create', [PaymentController::class, 'createPayment'])->name('url-create');
+    //Route::post('/bkash/create', [PaymentController::class, 'createPayment'])->name('url-create');
+    Route::get('/bkash/create/{fare_amount}/{ticket_id}', [PaymentController::class, 'createPayment'])->name('url-create');
     Route::get('/bkash/callback', [PaymentController::class, 'callback'])->name('url-callback');
 
     //serve ticket - conductor

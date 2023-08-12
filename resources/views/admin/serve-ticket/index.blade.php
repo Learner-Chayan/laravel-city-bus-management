@@ -85,7 +85,7 @@ label{
                                    <h3> Is Student ? </h3>
                                 </div>
                                 <div class="col-4">
-                                    <input onclick="calculateFare()" type="checkbox" id="isStudent" name="isStudent" class="form-control">
+                                    <input onclick="calculateFare()" type="checkbox" id="isStudentCheckbox"  class="form-control">
                                 </div>
                             </div>
 
@@ -104,6 +104,9 @@ label{
                                     <input type="hidden" name="fare_amount" id="fare_amount">
                                     <input type="hidden" name="from_id" id="from_id">
                                     <input type="hidden" name="to_id" id="to_id">
+                                    <input type="hidden" name="payment_by" value="On cash">
+                                    <input type="hidden" name="ticketing_by" value="conductor">
+                                    <input type="hidden" name="isStudent" id="isStudent"  value="0">
 
 
 
@@ -129,7 +132,7 @@ label{
 
             let from = $("input[name=from]:checked").val();
             let to = $("input[name=to]:checked").val();
-            let isStudent = $("#isStudent").is(":checked");
+            let isStudent = $("#isStudentCheckbox").is(":checked");
 
 
             let fares = {!!  $fares->price !!} ;
@@ -141,6 +144,7 @@ label{
             if(isStudent){
                 $("#fare_amount_show").text(fare_amount+" (50%) = "+Math.ceil(fare_amount/2));
                 fare_amount = Math.ceil(fare_amount / 2) ;
+                $("#isStudent").val(1);
             }else{
                 $("#fare_amount_show").text(fare_amount);
             }

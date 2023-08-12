@@ -14,7 +14,6 @@
                             <thead>
                             <tr>
                                 <th class="text-bold text-uppercase">#SL</th>
-                                <th class="text-bold text-uppercase">Trip Type</th>
                                 <th class="text-bold text-uppercase">Stoppage</th>
                                 <th class="text-bold text-uppercase">Start Time</th>
                                 <th class="text-bold text-uppercase">End Time</th>
@@ -30,17 +29,16 @@
 //                                    $fare = \App\Models\Fare::where('route_id',$trip->route)->first();
                                     $route = \App\Models\Route::findOrFail($trip->route);
                                     $stoppages = json_decode($route->stoppage_id);
-                                    
+
                                 @endphp
                                 <tr>
                                     <td>{{ ++$key }}</td>
-                                    <td>{{ $trip->trip_type  }}</td>
                                     <td>
                                         @foreach($stoppages as $stoppage)
 
                                           @php(
                                            $stoppageName =  \App\Models\Stopage::where('id',$stoppage)->first()->name
-                                          )  
+                                          )
 
                                           <li>{{$stoppageName}}</li>
                                         @endforeach

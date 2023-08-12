@@ -22,6 +22,7 @@
             </li>
             @endrole
             @role('admin')
+            <li><a class="{{Request::is('admin/ticketValidation') ? 'active' : ''}}" href="{{route('ticket.validate')}}"><i class="fa fa-calculator"></i><span class="nav-text">Ticket Validation</span></a></li>
             <li><a class="{{Request::is('admin/fare') ? 'active' : ''}}" href="{{route('fare.index')}}"><i class="fa fa-calculator"></i><span class="nav-text">Fare Calculation</span></a></li>
             <li><a class="{{Request::is('admin/route') ? 'active' : ''}}" href="{{route('route.index')}}"><i class="fa fa-road"></i><span class="nav-text">Route</span></a></li>
             <li><a class="{{Request::is('admin/stoppage') ? 'active' : ''}}" href="{{route('stoppage.index')}}"><i class="fa fa-stop-circle"></i><span class="nav-text">Stoppage</span></a></li>

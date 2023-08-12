@@ -66,7 +66,6 @@ class TripController extends Controller
             'checker_id' => 'required',
             'bus_id' => 'required',
             'total_seat' => 'required',
-            'trip_type' => 'required',
             'owner_id' => 'required'
         ]);
 
@@ -134,7 +133,6 @@ class TripController extends Controller
             'checker_id' => 'required',
             'bus_id' => 'required',
             'total_seat' => 'required',
-            'trip_type' => 'required',
             'owner_id' => 'required'
         ]);
 

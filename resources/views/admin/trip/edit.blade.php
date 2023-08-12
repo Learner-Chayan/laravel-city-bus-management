@@ -82,12 +82,7 @@
                                     <input type="text" readonly class="form-control" id="total_seat" name="total_seat" value="{{$trip->bus->seat_number}}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="total_seat" class="col-form-label">Trip Type:</label>
-                                    <select class="form-control select2" style="width: 100%" id="trip_type" name="trip_type">
-                                        <option value="">Select One</option>
-                                        <option value="Up" {{$trip->trip_type == "Up" ? 'selected' : ''}}>Up</option>
-                                        <option value="Down" {{$trip->trip_type == "Down" ? 'selected' : ''}}>Down</option>
-                                    </select>
+                                    <input type="hidden"  id="trip_type" name="trip_type" value=" ">
                                 </div>
                             </div>
                         </div>

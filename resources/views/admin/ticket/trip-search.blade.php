@@ -55,8 +55,8 @@
 
 <div class="modal fade" id="ticketModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-{{--            <form action="{{route('ticket.confirm')}}" method="POST">--}}
-            <form action="{{ route('url-create') }}" method="POST">
+            <form action="{{route('ticket.confirm')}}" method="POST">
+{{--            <form action="{{ route('url-create') }}" method="POST">--}}
 
                 @csrf
                 <div class="modal-content" >
@@ -94,6 +94,9 @@
                                 <input type="hidden"  name="trip_id" id="trip_id">
                                 <input type="hidden"  name="from_id" value="{{$from_id}}">
                                 <input type="hidden"  name="to_id" value="{{$to_id}}">
+                                <input type="hidden" name="payment_by" value="Pay later">
+                                <input type="hidden" name="ticketing_by" value="self">
+                                <input type="hidden" name="isStudent" value="0">
                             </div>
                         </div>
                     </div>

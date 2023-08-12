@@ -7,9 +7,11 @@ use App\Models\Route;
 use App\Models\Trip;
 use App\Models\Fare;
 use App\Models\Bus;
+use App\Models\UserDetails;
 use App\Models\Ticket_sale;
 use Illuminate\Http\Request;
 use PDF;
+use DB;
 
 //use Carbon\Carbon;
 
@@ -154,6 +156,8 @@ class TicketController extends Controller
             $serial = date('dmY').$bus->id.$tId;
         }
 
+        //check who cutting the ticket
+
         //create ticket
         $ticket = Ticket_sale::create([
             "serial"=> $serial,
@@ -162,7 +166,9 @@ class TicketController extends Controller
             "from"=> $request->from_id,
             "to"=> $request->to_id,
             "fare_amount"=> $fare_amount_total,
-            "total_seat"=> $request->totalTicket
+            "total_seat"=> $request->totalTicket,
+            "payment_by"=> $request->payment_by,
+            "isStudent"=> $request->isStudent,
         ]);
 
 
@@ -177,23 +183,30 @@ class TicketController extends Controller
         $ticket_sales->trip_info = $trip_info;
 
         $ticket_sales->from = Stopage::where('id',$ticket_sales->from)->first()->name;
-        $ticket_sales->to = Stopage::where('id',$ticket_sales->to)->first()->name;
+        $ticket_sales->to   = Stopage::where('id',$ticket_sales->to)->first()->name;
+        $ticket_sales->bus  = Bus::where('id',$trip_info->bus_id)->first();
 
-        $ticket_sales->bus = Bus::where('id',$trip_info->bus_id)->first();
 
+
+        if($request->ticketing_by == "self"){
+            //go to bkash option
+            return redirect()->route('url-create',['fare_amount' => $fare_amount_total, 'ticket_id'=>$ticket->id]);
+        }else{
+            return $this->returnTicket($ticket,$ticket_sales);
+        }
+        //return redirect('admin/purchase-history')->with('success', 'Your ticket purchased successfully!!');
+
+    }
+
+    public function returnTicket($ticket,$ticket_sales){
         $data = [
             'title' => "Ticket-".$ticket->serial,
             'date' => date('m/d/Y'),
-            'ticket' => $ticket_sales
+            'ticket' => $ticket_sales,
+            'issued_by' => auth()->user()->name,
         ];
-
-
         $pdf = PDF::loadView('admin.ticket.ticket', $data)->setPaper('A7', 'landscape');
-
-         $pdf->stream('Ticket-'.$ticket_sales->serial.'.pdf');
-
-        return redirect('admin/purchase-history')->with('success', 'Your ticket purchased successfully!!');
-
+        return $pdf->download('Ticket-'.$ticket_sales->serial.'.pdf');
     }
 
     public function purchaseHistory(){
@@ -226,10 +239,16 @@ class TicketController extends Controller
 
         $ticket_sales->bus = Bus::where('id',$trip_info->bus_id)->first();
 
+        $issued_by = '';
+        if($expected_user = DB::table('users')->where('id',$ticket_sales->issued_by)->first()){
+            $issued_by = $expected_user->name;
+        }
+
         $data = [
             'title' => "Ticket-".$ticket_sales->serial,
             'date' => date('m/d/Y'),
-            'ticket' => $ticket_sales
+            'ticket' => $ticket_sales,
+            'issued_by' => $issued_by,
         ];
 
         $pdf = PDF::loadView('admin.ticket.ticket', $data)->setPaper('A7', 'landscape');
@@ -262,7 +281,46 @@ class TicketController extends Controller
     }
 
 
-    public  function  createPayment(){
+    public  function  ticketValidation(){
+        $data['page_title'] = "Validate Ticket";
+        return view('admin.ticket-validation.index',$data);
+    }
 
+    public function  checkTicket(Request $request){
+        $request->validate([
+            'ticketNumber' => 'required'
+        ]);
+
+
+        $ticket_sales = Ticket_sale::where('serial', $request->ticketNumber)->first();
+        if($ticket_sales) {
+
+            $trip_info = Trip::where('id', $ticket_sales->trip_id)->first();
+            $ticket_sales->trip_info = $trip_info;
+
+            $ticket_sales->from = Stopage::where('id', $ticket_sales->from)->first()->name;
+            $ticket_sales->to = Stopage::where('id', $ticket_sales->to)->first()->name;
+
+            $ticket_sales->bus = Bus::where('id', $trip_info->bus_id)->first();
+
+            $issued_by = '';
+            if ($expected_user = DB::table('users')->where('id', $ticket_sales->issued_by)->first()) {
+                $issued_by = $expected_user->name;
+            }
+
+            $data = [
+                'page_title' => 'Validate Ticket',
+                'title' => "Ticket-" . $ticket_sales->serial,
+                'date' => date('m/d/Y'),
+                'ticket' => $ticket_sales,
+                'issued_by' => $issued_by,
+                'isTicketFound' => true,
+            ];
+
+
+            return view('admin.ticket-validation.index',$data);
+        }else{
+            return redirect()->back()->with('error', 'Ticket not found');
+        }
     }
 }

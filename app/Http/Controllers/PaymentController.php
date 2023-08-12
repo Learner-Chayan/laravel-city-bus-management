@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Session;
 use URL;
+use App\Models\Ticket_sale;
 use Illuminate\Support\Str;
 
 class PaymentController extends Controller
@@ -27,19 +28,12 @@ class PaymentController extends Controller
         );
     }
 
-    public function createPayment(Request $request)
+    public function createPayment($fare_amount,$ticket_id)
     {
 
-
         session([
-            'trip_id' => $request->trip_id,
-            'totalTicket' => $request->totalTicket,
-            'fare_amount' => $request->fare_amount,
-            'from_id' => $request->from_id,
-            'to_id' => $request->to_id,
+            'ticket_id' => $ticket_id
         ]);
-
-
 
         $header =$this->authHeaders();
 
@@ -49,7 +43,7 @@ class PaymentController extends Controller
             'mode' => '0011',
             'payerReference' => ' ',
             'callbackURL' => $website_url.'/admin/bkash/callback',
-            'amount' => $request->fare_amount ? $request->fare_amount : 10,
+            'amount' => $fare_amount ? $fare_amount : 20,
             'currency' => 'BDT',
             'intent' => 'sale',
             'merchantInvoiceNumber' => "Inv".Str::random(8) // you can pass here OrderID
@@ -98,41 +92,34 @@ class PaymentController extends Controller
     {
         $allRequest = $request->all();
 
-        dd($allRequest);
+        $ticket_sale = Ticket_sale::where('id',session('ticket_id'));
+        if($ticket_sale){
+            if(isset($allRequest['status']) && $allRequest['status'] == 'failure'){
+                //save payment fail
+                $ticket_sale->update(
+                    ['payment_by' => 'Payment failed']
+                );
+                return redirect('admin/purchase-history')->with('error', 'Payment failed but your ticket purchased successfully!!');
 
-        if(isset($allRequest['status']) && $allRequest['status'] == 'failure'){
-            return view('CheckoutURL.fail')->with([
-                'response' => 'Payment Failure'
-            ]);
-
-        }else if(isset($allRequest['status']) && $allRequest['status'] == 'cancel'){
-            return view('CheckoutURL.fail')->with([
-                'response' => 'Payment Cancell'
-            ]);
-
-        }else{
-
-            $response = $this->executePayment($allRequest['paymentID']);
-
-            $arr = json_decode($response,true);
-
-            if(array_key_exists("statusCode",$arr) && $arr['statusCode'] != '0000'){
-                return view('CheckoutURL.fail')->with([
-                    'response' => $arr['statusMessage'],
+            }else if(isset($allRequest['status']) && $allRequest['status'] == 'cancel'){
+                //save payment cancel
+                $ticket_sale->update(
+                    ['payment_by' => 'Payment cancel']
+                );
+                return redirect('admin/purchase-history')->with('error', 'Payment canceled but your ticket purchased successfully!!');
+            }else{
+                //save payment success
+                $paymentID = $allRequest['paymentID'];
+                $ticket_sale->update([
+                    'payment_by' => 'Bkash',
+                    'transaction_id' => $paymentID
                 ]);
-            }else if(array_key_exists("message",$arr)){
-                // if execute api failed to response
-                sleep(1);
-                $query = $this->queryPayment($allRequest['paymentID']);
-                return view('CheckoutURL.success')->with([
-                    'response' => $query
-                ]);
+
+                return redirect('admin/purchase-history')->with('success', 'Payment success and your ticket purchased successfully!!');
             }
-
-            return view('CheckoutURL.success')->with([
-                'response' => $response
-            ]);
-
+        }else{
+            // ticket okay, but unkown about payment .
+            return redirect('admin/purchase-history')->with('success', 'Your ticket purchased successfully!! If any wrong , contact with us');
         }
 
     }

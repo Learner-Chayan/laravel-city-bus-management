@@ -43,11 +43,14 @@
     </div>
 <pre>
 Journey Date:{{\Carbon\Carbon::parse($ticket->trip_info->start_time)->format('d M,Y H:i a') }}
-Coach Number:{{$ticket->bus->coach_number}}
-Bus Name:{{$ticket->bus->name}}
+Bus Name:{{$ticket->bus->name}} ({{$ticket->bus->coach_number}})
+Issued by :{{$issued_by}}
 Form:{{$ticket->from}}
 To:{{$ticket->to}}
-Fare : {{$ticket->fare_amount}}
+Fare : {{$ticket->fare_amount}} BDT ({{$ticket->payment_by}})
+@if($ticket->isStudent)
+Passenger type : Student
+@endif
 </pre>
     <div class="barcode">
         @php
