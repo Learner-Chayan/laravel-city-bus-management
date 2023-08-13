@@ -26,10 +26,10 @@
                                     <td>{{ $route->name }}</td>
                                     <td>
                                         <ol>
-                                            @foreach($stoppageIds as $key => $stop)
-                                                @php($stoppage = \App\Models\Stopage::findOrFail($stop))
+                                            @for($i=count($stoppageIds)-1; $i>=0; $i--)
+                                                @php($stoppage = \App\Models\Stopage::findOrFail($stoppageIds[$i]))
                                                     <li>{{$stoppage->name}}</li>
-                                            @endforeach
+                                            @endfor
                                         </ol>
                                     </td>
                                     <td>
@@ -93,7 +93,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="status" class="col-form-label">Stoppage: [ <b> Start stoppage select first </b>]</label>
+                                <label for="status" class="col-form-label">Stoppage: [ <b class="text-info"> Insert from last stoppage </b>]</label>
                                 <select id="stoppage_id" class="form-control select2" name="stoppage_id[]" multiple style="width: 100%" >
                                     @foreach($stoppages as $stoppage)
 
@@ -132,7 +132,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="status" class="col-form-label">Stoppages: [ <b> Start stoppage select first </b> ]</label>
+                            <label for="status" class="col-form-label">Stoppages: [ <b class="text-info"> Insert from last stoppage </b> ]</label>
                             <p id="selected_stoppages"></p>
                             <select id="editStoppage_id" class="form-control select2" name="stoppage_id[]" multiple style="width: 100%">
                                 @for($i=count($stoppages)-1; $i>=0; $i--)
@@ -262,11 +262,11 @@
 
             // show stoppages
             let stoppagesList = "";
-            for(let i=0; i<selected_stoppage_ids.length;i++){
+            for(let i=selected_stoppage_ids.length - 1; i>=0;i--){
 
                 for(let j=0; j<all_stoppages.length; j++){
                     if(selected_stoppage_ids[i] == all_stoppages[j].id){
-                        if(i !=0){ 
+                        if(i != selected_stoppage_ids.length -1){ 
                             stoppagesList += " ==> ";
                         }
                         stoppagesList += " <b>"+all_stoppages[j].name+"</b>";
