@@ -37,6 +37,7 @@
                                 <h6> Issued by : <b> {{$issued_by}}</b> </h6>
                                 <h6> Form : <b> {{$ticket->from}}</b> </h6>
                                 <h6> To : <b> {{$ticket->to}}</b> </h6>
+                                <h6> Total seat : <b> {{$ticket->total_seat}}</b> </h6>
                                 <h6> Fare : <b> {{$ticket->fare_amount}} BDT ({{$ticket->payment_by}})</b> </h6>
                                 @if($ticket->isStudent)
                                     <p> Passenger type : Student</p>

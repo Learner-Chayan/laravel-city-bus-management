@@ -101,6 +101,8 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function () {
 
     //serve ticket - conductor
     Route::get('/serve-ticket/{route}',[TicketController::class, 'ticketOptions'])->name('serve.ticket');
+    Route::get('/trip-tickets/{tripId}', [TicketController::class, 'showTripTickets'])->name('trip.ticketsList');
+    Route::get('/status-update/{ticketId}', [TicketController::class, 'ticketStatusUpdate'])->name('ticket.status.update');
 });
 
 //tickets

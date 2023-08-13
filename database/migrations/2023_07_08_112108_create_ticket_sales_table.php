@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('total_seat');
             $table->string('transaction_id')->nullable();
             $table->string('serial')->unique();
-            $table->string('status')->nullable();
+            $table->tinyInteger('status')->default(0);
             $table->string('payment_by');
             $table->tinyInteger('isStudent')->default(0);
             $table->timestamps();

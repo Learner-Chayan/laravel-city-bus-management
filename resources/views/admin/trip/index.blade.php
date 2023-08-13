@@ -34,19 +34,20 @@
                                 <tr>
                                     <td>{{ ++$key }}</td>
                                     <td>
-                                        @foreach($stoppages as $stoppage)
+                                      
+                                        @for($i=count($stoppages)-1; $i>=0; $i--)
 
                                           @php(
-                                           $stoppageName =  \App\Models\Stopage::where('id',$stoppage)->first()->name
+                                           $stoppageName =  \App\Models\Stopage::where('id',$stoppages[$i])->first()->name
                                           )
 
                                           <li>{{$stoppageName}}</li>
-                                        @endforeach
+                                        @endfor
                                     </td>
                                     <td>{{ \Carbon\Carbon::parse($trip->start_time)->format('d M,Y H:i a') }}</td>
                                     <td>{{ \Carbon\Carbon::parse($trip->end_time)->format('d M,Y H:i a') }}</td>
                                     <td>{{ $routesArr[$trip->route] }}</td>
-                                    <td>{{ $trip->bus->name}} <br> CN-{{$trip->bus->coach_number}} <br> Seat-{{ $trip->total_seat }}</td>
+                                    <td>{{ $trip->bus->name}} <br> Coach No-{{$trip->bus->coach_number}} <br> Seat-{{ $trip->total_seat }}</td>
                                     <td>Driver-<strong>{{ $trip->driver->name }}</strong>  <br> Checker-<strong>{{ $trip->checker->name }}</strong> <br> Helper-<strong>{{ $trip->helper->name }}</strong></td>
                                     <td>
 {{--                                        <button class="btn btn-sm btn-primary fa fa-edit" data-toggle="modal" data-target="#editModal" onclick="showFormData({{$trip}})"> Edit</button>--}}

@@ -35,12 +35,17 @@ label{
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">{{$page_title}}</h4>
-                    <p>
+                    <h4>
 
-                        Trip time : {{$trip->start_time}} &nbsp;
+                       <span  style="opacity:0.5"> Trip time : {{ \Carbon\Carbon::parse($trip->start_time)->format('d M , Y H:i a')}} &nbsp;
                         Total seat : {{$trip->total_seat}} &nbsp;
                         Bus : {{$trip->bus->name}} ( {{$trip->bus->coach_number}} ) &nbsp;
-                    </p>
+                        </span>
+
+                        <a class="btn btn-default" href="{{ route('trip.ticketsList', $trip->id)}}" style="border:1px solid #ddd">
+                         <i class="fa fa-eye"></i> View tickets 
+                        </a>
+                    </h4>
 
 
                     <div class="row">
@@ -81,17 +86,17 @@ label{
                     <div class="row">
                         <div class="col-6">
                             <div class="row">
-                                <div class="col-3">
+                                <div class="col-5">
                                    <h3> Is Student ? </h3>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-2">
                                     <input onclick="calculateFare()" type="checkbox" id="isStudentCheckbox"  class="form-control">
                                 </div>
                             </div>
 
                         </div>
                         <div class="col-6">
-                            <h3> <block></block> Fare amount : <span id="fare_amount_show"></span> BDT </h3>
+                            <h3> <block></block> Fare amount : <span id="fare_amount_show">0</span> BDT </h3>
                         </div>
                     </div>
                     <hr/>
@@ -107,6 +112,9 @@ label{
                                     <input type="hidden" name="payment_by" value="On cash">
                                     <input type="hidden" name="ticketing_by" value="conductor">
                                     <input type="hidden" name="isStudent" id="isStudent"  value="0">
+                                    <input type="hidden" name="status" id="isStudent"  value="1">
+                                    <!-- Status 1 means ticket confirmed and paid -->
+                                    
 
 
 
@@ -142,11 +150,11 @@ label{
             let fare_amount = fares["fare_"+route+"_"+from+"_"+to];
 
             if(isStudent){
-                $("#fare_amount_show").text(fare_amount+" (50%) = "+Math.ceil(fare_amount/2));
+                $("#fare_amount_show").text(fare_amount ?  fare_amount+" (50%) = "+Math.ceil(fare_amount/2) : 0);
                 fare_amount = Math.ceil(fare_amount / 2) ;
                 $("#isStudent").val(1);
             }else{
-                $("#fare_amount_show").text(fare_amount);
+                $("#fare_amount_show").text(fare_amount ? fare_amount : 0);
             }
 
 

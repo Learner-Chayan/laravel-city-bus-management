@@ -79,7 +79,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="total_seat" class="col-form-label">Total Seat:</label>
-                                    <input type="text" readonly class="form-control" id="total_seat" name="total_seat" value="{{$trip->bus->seat_number}}">
+                                    <input type="text" class="form-control" id="total_seat" name="total_seat" value="{{$trip->total_seat}}">
                                 </div>
                                 <div class="form-group">
                                     <input type="hidden"  id="trip_type" name="trip_type" value=" ">
@@ -139,15 +139,15 @@
             })
         });
         function busSelected(buses){
-            //console.log(buses);
-            let busId = $("#bus_id").val();
-            for (let i = 0; i < buses.length; i++) {
-                if(buses[i].id == busId){
-                    $("#total_seat").val(buses[i].seat_number);
-                    break;
-                }
+            
+            // let busId = $("#bus_id").val();
+            // for (let i = 0; i < buses.length; i++) {
+            //     if(buses[i].id == busId){
+            //         $("#total_seat").val(buses[i].seat_number);
+            //         break;
+            //     }
 
-            }
+            // }
         }
     </script>
 
