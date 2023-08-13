@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\FareController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -51,12 +52,21 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function () {
     Route::resource('socials','Controllers\SocialController');
     Route::resource('faqs','Controllers\FaqController');
     Route::resource('stoppage','StopageController');
-    Route::resource('trip','TripController');
     Route::resource('owner','OwnerController');
     Route::post('owner-update', ['as' => 'owner-update', 'uses' => 'OwnerController@update']);
 
     Route::resource('driver','DriverController');
     Route::post('driver-update', ['as' => 'driver-update', 'uses' => 'DriverController@update']);
+
+    Route::resource('trip','TripController');
+
+    Route::post('trip-update', ['as' => 'trip-update', 'uses' => 'TripController@update']);
+
+    Route::resource('ticket-checker','TicketCheckerController');
+    Route::post('ticket-checker-update', ['as' => 'ticket-checker-update', 'uses' => 'TicketCheckerController@update']);
+
+    Route::resource('helper','HelperController');
+    Route::post('helper-update', ['as' => 'helper-update', 'uses' => 'HelperController@update']);
 
     Route::resource('customer','CustomerController');
     Route::post('customer-update', ['as' => 'customer-update', 'uses' => 'CustomerController@update']);
@@ -67,17 +77,30 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function () {
     Route::resource('route','RouteController');
     Route::post('route-update', ['as' => 'route-update', 'uses' => 'RouteController@update']);
 
-
     //fare
     Route::get('/fare', [FareController::class, 'index'])->name('fare.index');
     Route::post('/fare', [FareController::class, 'pricing'])->name('fare.update');
 
 
-    //ticket 
+    //ticket
     Route::get('/ticket',[TicketController::class, 'index'])->name('ticket');
+    Route::get('/ticket-pdf/{id}',[TicketController::class, 'ticketPdf'])->name('ticket-pdf');
     Route::get('/search-trip',[TicketController::class, 'searchTrip'])->name('search.trip');
     Route::post('/ticket-confirmation', [TicketController::class, 'ticketConfirmation'])->name('ticket.confirm');
     Route::get('/purchase-history',[TicketController::class , 'purchaseHistory'])->name('purchase.history');
+
+    //ticket validation
+    Route::get('/ticketValidation', [TicketController::class, 'ticketValidation'])->name('ticket.validate');
+    Route::get('/checkTicket', [TicketController::class, 'ticketValidation'])->name('ticket.check.back');
+    Route::post('/checkTicket', [TicketController::class, 'checkTicket'])->name('ticket.check');
+
+    //bkash payment for user
+    //Route::post('/bkash/create', [PaymentController::class, 'createPayment'])->name('url-create');
+    Route::get('/bkash/create/{fare_amount}/{ticket_id}', [PaymentController::class, 'createPayment'])->name('url-create');
+    Route::get('/bkash/callback', [PaymentController::class, 'callback'])->name('url-callback');
+
+    //serve ticket - conductor
+    Route::get('/serve-ticket/{route}',[TicketController::class, 'ticketOptions'])->name('serve.ticket');
 });
 
 //tickets
@@ -95,4 +118,24 @@ Route::get('/stoppage-get',function (){
         $stoppage[] = \App\Models\Stopage::findOrFail($stop);
     }
     return $stoppage;
+});
+Route::get('/get-owner-employee',function (){
+    $ownerId = \Illuminate\Support\Facades\Request::get('owner_id');
+    $employees = \App\Models\UserDetails::where('owner_id',$ownerId)->get();
+    $bus = \App\Models\Bus::where('owner_id',$ownerId)->get();
+
+    $driver = [];
+    $checker = [];
+    $helper = [];
+    foreach ($employees as $employee){
+        $em = \App\User::findOrFail($employee->user_id);
+        if ($em->customer_type == 3){
+            $driver[] = $em;
+        }elseif ($em->customer_type == 4){
+            $checker[] = $em;
+        }else{
+            $helper[] = $em;
+        }
+    }
+    return Response::json(['bus'=> $bus,'driver' => $driver, 'checker' => $checker, 'helper' => $helper]);
 });

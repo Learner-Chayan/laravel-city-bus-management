@@ -7,40 +7,57 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">{{$page_title}}</h4>
-                    <button class="btn btn-primary uppercase text-bold float-right" data-toggle="modal" data-target="#addModal"> New trip</button>
-                    <div class="table-responsive" style="overflow-x: hidden">
+{{--                    <button class="btn btn-primary uppercase text-bold float-right" data-toggle="modal" data-target="#addModal"> New trip</button>--}}
+                    <a href="{{route('trip.create')}}" class="btn btn-primary uppercase text-bold float-right"> New trip</a>
+                    <div class="table-responsive">
                         <table id="example" class="table table-striped table-bordered zero-configuration">
                             <thead>
                             <tr>
                                 <th class="text-bold text-uppercase">#SL</th>
+                                <th class="text-bold text-uppercase">Stoppage</th>
                                 <th class="text-bold text-uppercase">Start Time</th>
                                 <th class="text-bold text-uppercase">End Time</th>
                                 <th class="text-bold text-uppercase">Route</th>
-                                <th class="text-bold text-uppercase">Bus</th>
-                                <th class="text-bold text-uppercase">Seat</th>
-                                <th class="text-bold text-uppercase">Driver</th>
-                                <th class="text-bold text-uppercase">Cotacter</th>
-                                <th class="text-bold text-uppercase">Helper</th>
+                                <th class="text-bold text-uppercase">Bus Details</th>
+                                <th class="text-bold text-uppercase">Employee</th>
                                 <th class="text-bold text-uppercase">Action</th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach ($trips as $key => $trip)
+                                @php
+//                                    $fare = \App\Models\Fare::where('route_id',$trip->route)->first();
+                                    $route = \App\Models\Route::findOrFail($trip->route);
+                                    $stoppages = json_decode($route->stoppage_id);
+
+                                @endphp
                                 <tr>
                                     <td>{{ ++$key }}</td>
-                                    <td>{{ $trip->start_time }}</td>
-                                    <td>{{ $trip->end_time }}</td>
-                                    <td>{{ $routesArr[$trip->route] }}</td>
-                                    <td>{{ $busesArr[$trip->bus] }}</td>
-                                    <td>{{ $trip->total_seat }}</td>
-                                    <td>{{ $trip->driver }}</td>
-                                    <td>{{ $trip->contacter }}</td>
-                                    <td>{{ $trip->helper }}</td>
                                     <td>
-                                        <button class="btn btn-sm btn-primary fa fa-edit" data-toggle="modal" data-target="#editModal" onclick="showFormData({{$trip}})"> Edit</button>
-                                         @can('trip-destroy') 
+                                        @foreach($stoppages as $stoppage)
+
+                                          @php(
+                                           $stoppageName =  \App\Models\Stopage::where('id',$stoppage)->first()->name
+                                          )
+
+                                          <li>{{$stoppageName}}</li>
+                                        @endforeach
+                                    </td>
+                                    <td>{{ \Carbon\Carbon::parse($trip->start_time)->format('d M,Y H:i a') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($trip->end_time)->format('d M,Y H:i a') }}</td>
+                                    <td>{{ $routesArr[$trip->route] }}</td>
+                                    <td>{{ $trip->bus->name}} <br> CN-{{$trip->bus->coach_number}} <br> Seat-{{ $trip->total_seat }}</td>
+                                    <td>Driver-<strong>{{ $trip->driver->name }}</strong>  <br> Checker-<strong>{{ $trip->checker->name }}</strong> <br> Helper-<strong>{{ $trip->helper->name }}</strong></td>
+                                    <td>
+{{--                                        <button class="btn btn-sm btn-primary fa fa-edit" data-toggle="modal" data-target="#editModal" onclick="showFormData({{$trip}})"> Edit</button>--}}
+                                        <a href="{{route('trip.edit',$trip->id)}}" class="btn btn-sm btn-primary fa fa-edit" > Edit</a>
+                                         @role('admin|owner')
                                             {!! Form::button('<i class="fa fa-trash"></i> Delete', ['class' => 'btn btn-sm btn-danger bold uppercase delete_button','data-toggle'=>"modal",'data-target'=>"#DelModal",'data-id'=>$trip->id]) !!}
-                                        @endcan
+                                        @endrole
+
+                                        <a href="{{ route('serve.ticket',$trip->id)}}" class="btn btn-primary btn-sm">
+                                            Tickets
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -101,7 +118,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="route" class="col-form-label">Route:</label>
-                                    <select class="form-control" id="route" name="route">
+                                    <select class="form-control select2" style="width: 100%" id="route" name="route">
                                         <option value="">Select One</option>
                                         @foreach($routes as $route)
                                             <option value="{{$route->id}}">{{$route->name}}</option>
@@ -110,24 +127,39 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="driver" class="col-form-label">Driver:</label>
-                                    <input type="text" class="form-control" id="driver" name="driver">
+                                    <select class="form-control select2" style="width: 100%" id="driver_id" name="driver_id">
+                                        <option value="">Select One</option>
+                                        @foreach($drivers as $driver)
+                                            <option value="{{$driver->id}}">{{$driver->name}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="helper" class="col-form-label">Helper:</label>
-                                    <input type="text" class="form-control" id="helper" name="helper">
+                                    <select class="form-control select2" style="width: 100%" id="helper_id" name="helper_id">
+                                        <option value="">Select One</option>
+                                        @foreach($helpers as $helper)
+                                            <option value="{{$helper->id}}">{{$helper->name}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="contacter" class="col-form-label">Contacter:</label>
-                                    <input type="text" class="form-control" id="contacter" name="contacter">
+                                    <label for="Contractor" class="col-form-label">Contractor:</label>
+                                    <select class="form-control select2" style="width: 100%" id="checker_id" name="checker_id">
+                                        <option value="">Select One</option>
+                                        @foreach($checkers as $checker)
+                                            <option value="{{$checker->id}}">{{$checker->name}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="bus" class="col-form-label">Bus :</label>
-                                    <select class="form-control" id="bus" name="bus" onchange="busSelected({{ $buses }})">
+                                    <select class="form-control select2" style="width: 100%" id="bus_id" name="bus_id" onchange="busSelected({{ $buses }})">
                                         <option value="">Select One</option>
                                         @foreach($buses as $bus)
-                                            <option value="{{$bus->id}}">{{$bus->name}}</option>
+                                            <option value="{{$bus->id}}">{{$bus->name}}(CN-{{$bus->coach_number}})</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -140,7 +172,7 @@
                                 </div>
                             </div>
                         </div>
-                           
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -216,7 +248,7 @@
                             </div>
                         </div>
                         <input type="hidden" id="id" name="id">
-    
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -299,7 +331,7 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
-                
+
                 // formdata is not working with update
                 $.ajax({
                     method:"PUT",
@@ -336,13 +368,13 @@
 
         function busSelected(buses){
             //console.log(buses);
-            let busId = $("#bus").val();
+            let busId = $("#bus_id").val();
             for (let i = 0; i < buses.length; i++) {
                 if(buses[i].id == busId){
                     $("#total_seat").val(buses[i].seat_number);
                     break;
                 }
-                
+
             }
         }
 
@@ -354,7 +386,7 @@
                     $("#edit_total_seat").val(buses[i].seat_number);
                     break;
                 }
-                
+
             }
         }
 

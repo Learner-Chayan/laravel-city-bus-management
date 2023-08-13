@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('owner_id');
             $table->string('name',50);
+            $table->int('coach_number',50)->unique();
             $table->string('reg_number',50);
             $table->string('reg_last_date');
             $table->string('reg_image',50)->nullable();

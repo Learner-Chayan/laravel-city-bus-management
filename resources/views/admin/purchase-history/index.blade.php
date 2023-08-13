@@ -13,6 +13,7 @@
                             <table class="table">
                                 <tr>
                                     <th>SL</th>
+                                    <th>Ticket Number</th>
                                     <th>Issue date</th>
                                     <th>Journey Date </th>
                                     <th>From</th>
@@ -24,11 +25,12 @@
                                 <tr>
                                 @php $i++; @endphp
                                     <td>{{ $i }}</td>
+                                    <td>{{$info->serial}}</td>
                                     <td>{{ $info->created_at }}</td>
                                     <td>{{ $info->trip_info->start_time }}</td>
                                     <td>{{ $info->from }}</td>
                                     <td>{{ $info->to }}</td>
-                                    <td><button class="btn btn-default"><i class="fa fa-download"></i></button></td>
+                                    <td><a href="{{route('ticket-pdf',$info->id)}}" class="btn btn-default"><i class="fa fa-download"></i></a></td>
                                 </tr>
                                 @endforeach
                             </table>

@@ -8,14 +8,14 @@
                 <div class="card-body">
                     <h4 class="card-title">{{$page_title}}</h4>
                     <hr/>
-                           
+
                             <div class="row">
                                 <div class="col-4">
-                                    <h5 class="text-right"> 
+                                    <h5 class="text-right">
                                         <span id="from">
                                             {{$from}}
                                         </span>
-                                    </h5> 
+                                    </h5>
                                 </div>
                                 <div class="col-3"> <p style="border:2px dotted #ddd;margin-top:9px"></p> </div>
                                 <div class="col-4">
@@ -26,16 +26,16 @@
                             @foreach($trips as $trip)
                             <div class="row border p-4">
                                 <div class="clo-6">
-                                    <h6> Bus : </i> 
+                                    <h6> Bus : {{$trip->bus->name}}</i>
 
-                                        @php 
-                                            foreach($buses as $bus){
-                                                if($trip->bus == $bus->id){
-                                                    echo $bus->name;
-                                                }
-                                            }
+{{--                                        @php --}}
+{{--                                            foreach($buses as $bus){--}}
+{{--                                                if($trip->bus == $bus->id){--}}
+{{--                                                    echo $bus->name;--}}
+{{--                                                }--}}
+{{--                                            }--}}
 
-                                        @endphp
+{{--                                        @endphp--}}
                                     </h6>
                                     <p>Trip Start : {{ $trip->start_time }}</p>
                                 </div>
@@ -56,6 +56,8 @@
 <div class="modal fade" id="ticketModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <form action="{{route('ticket.confirm')}}" method="POST">
+{{--            <form action="{{ route('url-create') }}" method="POST">--}}
+
                 @csrf
                 <div class="modal-content" >
                     <div class="modal-header bg-orange-active text-center">
@@ -92,6 +94,9 @@
                                 <input type="hidden"  name="trip_id" id="trip_id">
                                 <input type="hidden"  name="from_id" value="{{$from_id}}">
                                 <input type="hidden"  name="to_id" value="{{$to_id}}">
+                                <input type="hidden" name="payment_by" value="Pay later">
+                                <input type="hidden" name="ticketing_by" value="self">
+                                <input type="hidden" name="isStudent" value="0">
                             </div>
                         </div>
                     </div>
@@ -107,10 +112,10 @@
 
 @endsection
 
-@push('js') 
+@push('js')
         <script>
             function showTicketModal(trip_id){
-          
+
 
                 $("#show_from").text($("#from").text());
                 $("#show_to").text($("#to").text());

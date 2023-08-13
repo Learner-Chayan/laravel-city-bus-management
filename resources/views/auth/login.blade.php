@@ -25,8 +25,8 @@
         </form>
         <p class="mt-5 login-form__footer">
             @if(env('REGISTRATION_STATUS'))
-                Dont have account? <a href="{{route('register')}}" class="text-primary">Sign Up</a> now
+                <h4><a href="{{route('register')}}" class="text-primary">Customer Registration</a></h4>
             @endif
-            &nbsp;  <a href="{{route('password.request')}}" class="text-primary">Forgot Password ?</a> </p>
+            &nbsp;  <h4><a href="{{route('password.request')}}" class="text-primary">Forgot Password ?</a> </h4>
     </div>
 @endsection

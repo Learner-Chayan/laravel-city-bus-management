@@ -26,7 +26,7 @@ class RegisterController extends Controller
     public function showRegistrationForm()
     {
 
-        $data['page_title'] = "Sing Up Now";
+        $data['page_title'] = "Customer Registration";
         return view('auth.register',$data);
     }
     protected function validator(array $data)
@@ -41,16 +41,17 @@ class RegisterController extends Controller
 
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'phone' => $data['phone'],
             'password' => $data['password'],
             'temp_password' => $data['password'],
-            'customer_type' => 1,
+            'customer_type' => 5,
 
         ]);
-        // $role = Role::where('name','admin')->first();
-        // return $role;
+        $role = Role::where('name','customer')->first();
+        $user->roles()->attach($role);
+        return $user;
     }
 }

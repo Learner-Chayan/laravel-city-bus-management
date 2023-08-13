@@ -29,7 +29,7 @@
                                 <tr>
                                     <td>{{ ++$key }}</td>
                                     <td>{{ $bus->owner->name }}</td>
-                                    <td>{{ $bus->name }}</td>
+                                    <td>{{ $bus->name }}-{{$bus->coach_number}}</td>
                                     <td>{{ $bus->seat_number }}</td>
                                     <td>{{ $bus->reg_number }}</td>
                                     <td>{{ $bus->reg_last_date }}</td>
@@ -100,6 +100,10 @@
                             <input type="text" class="form-control" id="bus-name" name="name">
                         </div>
                         <div class="form-group">
+                            <label for="bus-name" class="col-form-label">Coach Number: <code>This number is unique</code></label>
+                            <input type="text" class="form-control" id="coach_number" name="coach_number">
+                        </div>
+                        <div class="form-group">
                             <label for="bus-name" class="col-form-label">Total Seat:</label>
                             <input type="text" class="form-control" id="bus-seat" name="seat_number">
                         </div>
@@ -150,6 +154,10 @@
                         <div class="form-group">
                             <label for="bus-name" class="col-form-label">Bus Name:</label>
                             <input type="text" class="form-control" id="edit-bus-name" name="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="bus-name" class="col-form-label">Coach Number: <code>This number is unique</code></label>
+                            <input type="text" class="form-control" id="edit_coach_number" name="coach_number">
                         </div>
                         <div class="form-group">
                             <label for="bus-name" class="col-form-label">Total Seat:</label>
@@ -278,6 +286,7 @@
             $("#edit-id").val(data.id);
             $("#edit_bus-seat").val(data.seat_number);
             $("#edit-bus-name").val(data.name);
+            $("#edit_coach_number").val(data.coach_number);
             $("#edit-reg-number").val(data.reg_number);
             $("#edit-reg-last-date").val(data.reg_last_date);
 
