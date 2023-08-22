@@ -54,13 +54,14 @@ label{
                             <hr/>
                             <ul>
                                 <div class="row">
-                                @foreach(json_decode($route->stoppage_id) as $stoppage)
+                                @php $from_stoppages = json_decode($route->stoppage_id)  @endphp
+                                @for($i=count($from_stoppages)-1; $i>=0 ; $i--)
 
                                     <div class="col-5">
-                                       <label for="from{{$stoppage}}" onclick="calculateFare()"><input type="radio" class="radio" name="from" id="from{{$stoppage}}" value="{{$stoppage}}">
-                                         {{ $stoppage_details[$stoppage] }} </label >
+                                       <label for="from{{$from_stoppages[$i]}}" onclick="calculateFare()"><input type="radio" class="radio" name="from" id="from{{$from_stoppages[$i]}}" value="{{$from_stoppages[$i]}}">
+                                         {{ $stoppage_details[$from_stoppages[$i]] }} </label >
                                     </div>
-                                @endforeach
+                                @endfor
                                 </div>
                             </ul>
 

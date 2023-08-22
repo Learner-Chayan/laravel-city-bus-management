@@ -17,6 +17,8 @@
                                         <th>Ticket Number</th>
                                         <th>Amount (total passenger)</th>
                                         <th>Passenger type </th>
+                                        <th>Issued by </th>
+                                        <th>Payment by </th>
                                         <th>From</th>
                                         <th>To</th>
                                         <th>Status</th>
@@ -30,6 +32,8 @@
                                         <td>{{$info->serial}}</td>
                                         <td>{{ $info->fare_amount  }} ({{ $info->total_seat}})</td>
                                         <td>@php echo $info->isStudent ? '<p class="text-info">Student </p>' : 'Normal' @endphp</td>
+                                        <td>{{ $info->issued_by }}</td>
+                                        <td>{{ $info->payment_by }}</td>
                                         <td>{{ $info->from }}</td>
                                         <td>{{ $info->to }}</td>
                                         <td>

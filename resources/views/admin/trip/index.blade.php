@@ -7,8 +7,10 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">{{$page_title}}</h4>
-{{--                    <button class="btn btn-primary uppercase text-bold float-right" data-toggle="modal" data-target="#addModal"> New trip</button>--}}
+
+                    @role('admin')
                     <a href="{{route('trip.create')}}" class="btn btn-primary uppercase text-bold float-right"> New trip</a>
+                    @endrole
                     <div class="table-responsive">
                         <table id="example" class="table table-striped table-bordered zero-configuration">
                             <thead>
@@ -50,15 +52,23 @@
                                     <td>{{ $trip->bus->name}} <br> Coach No-{{$trip->bus->coach_number}} <br> Seat-{{ $trip->total_seat }}</td>
                                     <td>Driver-<strong>{{ $trip->driver->name }}</strong>  <br> Checker-<strong>{{ $trip->checker->name }}</strong> <br> Helper-<strong>{{ $trip->helper->name }}</strong></td>
                                     <td>
-{{--                                        <button class="btn btn-sm btn-primary fa fa-edit" data-toggle="modal" data-target="#editModal" onclick="showFormData({{$trip}})"> Edit</button>--}}
+                                        @role('admin')
                                         <a href="{{route('trip.edit',$trip->id)}}" class="btn btn-sm btn-primary fa fa-edit" > Edit</a>
-                                         @role('admin|owner')
-                                            {!! Form::button('<i class="fa fa-trash"></i> Delete', ['class' => 'btn btn-sm btn-danger bold uppercase delete_button','data-toggle'=>"modal",'data-target'=>"#DelModal",'data-id'=>$trip->id]) !!}
                                         @endrole
+                                        @role('admin')
+                                            {!! Form::button('<i class="fa fa-trash"></i> Delete', ['class' => 'btn btn-sm btn-danger bold uppercase delete_button','data-toggle'=>"modal",'data-target'=>"#DelModal",'data-id'=>$trip->id]) !!}
+                                         @endrole
 
+                                         @role('admin|checker')
                                         <a href="{{ route('serve.ticket',$trip->id)}}" class="btn btn-primary btn-sm">
                                             Tickets
                                         </a>
+                                        @endrole
+                                        @role('admin|owner|helper|driver|checker')
+                                        <a href="{{ route('trip.receipts',$trip->id)}}" class="btn btn-success btn-sm">
+                                            Receipts
+                                        </a>
+                                        @endrole
                                     </td>
                                 </tr>
                             @endforeach

@@ -11,7 +11,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label class="text-uppercase">First Name<code>*</code></label>
-                                <input type="text" class="form-control" name="name" value="{{old('name')}}" placeholder="First Name">
+                                <input type="text" class="form-control" name="first_name" value="{{old('name')}}" placeholder="First Name">
                             </div>
                             <div class="form-group col-md-6">
                                 <label class="text-uppercase">Last Name</label>
@@ -30,7 +30,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label class="text-bold text-uppercase">Password<code>*</code></label>
-                                <input type="text" class="form-control" name="password" required placeholder="Your Password">
+                                <input type="password" class="form-control" name="password" required placeholder="Your Password">
                             </div>
                             <div class="form-group col-md-6">
                                 <label class="text-bold text-uppercase">Confirm Password<code>*</code></label>
@@ -42,7 +42,9 @@
                             <select name="roles" class="form-control select2" required data-placeholder="Select a Role" >
                                 <option value="">Select One</option>
                                 @foreach($roles as $role)
-                                    <option>{!! $role->name !!}</option>
+                                    @if($role->name !='helper' && $role->name !='driver' && $role->name !='checker')
+                                        <option>{!! $role->name !!}</option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>

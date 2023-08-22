@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\FareController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\CalculationController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -103,6 +104,9 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function () {
     Route::get('/serve-ticket/{route}',[TicketController::class, 'ticketOptions'])->name('serve.ticket');
     Route::get('/trip-tickets/{tripId}', [TicketController::class, 'showTripTickets'])->name('trip.ticketsList');
     Route::get('/status-update/{ticketId}', [TicketController::class, 'ticketStatusUpdate'])->name('ticket.status.update');
+
+    //get amount and list by trip
+    Route::get('/trip-receipts/{tripId}', [CalculationController::class, 'showTripReceipts'])->name('trip.receipts');
 });
 
 //tickets

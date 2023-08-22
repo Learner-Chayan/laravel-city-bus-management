@@ -36,9 +36,9 @@
                                     <td><img width="50" src="{{asset("public/images/bus/$bus->reg_image")}}" alt="buss number plate image"></td>
                                     <td>
                                         <button class="btn btn-sm btn-primary fa fa-edit" data-toggle="modal" data-target="#editModal" onclick="showFormData({{$bus}})"> Edit</button>
-                                        @can('destroy')
+                                        @role('admin|owner')
                                             {!! Form::button('<i class="fa fa-trash"></i> Delete', ['class' => 'btn btn-sm btn-danger bold uppercase delete_button','data-toggle'=>"modal",'data-target'=>"#DelModal",'data-id'=>$bus->id]) !!}
-                                        @endcan
+                                        @endrole
                                     </td>
                                 </tr>
                             @endforeach

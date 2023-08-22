@@ -25,13 +25,13 @@
                             @foreach ($drivers as $key => $driver)
                                 @php
                                     $userDetails = \App\Models\UserDetails::where('user_id',$driver->id)->first();
-                                    $owner = \App\User::findOrFail($userDetails->owner_id);
+                                      @ $owner = \App\User::findOrFail($userDetails->owner_id); 
                                 @endphp
                                 <tr>
                                     <td>{{ ++$key }}</td>
                                     <td><img width="75" src="@if($driver->image !== null) {{asset('public/images/user')}}/{{$driver->image}} @else {{asset('public/default.png')}} @endif" alt="Driver Image"></td>
                                     <td>{{ $driver->name }}</td>
-                                    <td>{{ $owner->name }}</td>
+                                     <td>{{ $owner->name }}</td>
                                     <td>{{ $driver->phone }}</td>
                                     <td>{{ $driver->email }}</td>
 {{--                                    <td>{{ $driver->address }}</td>--}}

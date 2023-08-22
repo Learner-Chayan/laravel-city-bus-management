@@ -60,7 +60,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="Contractor" class="col-form-label">Contractor:</label>
+                                    <label for="Contractor" class="col-form-label">Conductor:</label>
                                     <select class="form-control select2" style="width: 100%" id="checker_id" name="checker_id">
                                         <option value="">Select One</option>
                                         @foreach($checkers as $checker)
@@ -110,26 +110,27 @@
                 let helper = data.helper;
                 let bus = data.bus;
 
-                $('#driver_id').empty();
-                $('#checker_id').empty();
-                $('#helper_id').empty();
+                // $('#driver_id').empty();
+                // $('#checker_id').empty();
+                // $('#helper_id').empty();
                 $('#bus_id').empty();
                 //driver
-                $('#driver_id').append('<option value="">Select One</option>')
-                $.each(driver,function (index,driverObj){
-                    $('#driver_id').append('<option class="bold" value="'+driverObj.id+'">'+driverObj.name+ ' '+driverObj.phone+'</option>')
-                });
+                // $('#driver_id').append('<option value="">Select One</option>')
+                // $.each(driver,function (index,driverObj){
+                //     $('#driver_id').append('<option class="bold" value="'+driverObj.id+'">'+driverObj.name+ ' '+driverObj.phone+'</option>')
+                // });
+
                 //checker
-                $('#checker_id').append('<option value="">Select One</option>')
-                $.each(checker,function (index,checkerObj){
-                    $('#checker_id').append('<option class="bold" value="'+checkerObj.id+'">'+checkerObj.name+ ' '+checkerObj.phone+'</option>')
-                });
+                // $('#checker_id').append('<option value="">Select One</option>')
+                // $.each(checker,function (index,checkerObj){
+                //     $('#checker_id').append('<option class="bold" value="'+checkerObj.id+'">'+checkerObj.name+ ' '+checkerObj.phone+'</option>')
+                // });
 
                 //helper
-                $('#helper_id').append('<option value="">Select One</option>')
-                $.each(helper,function (index,helperObj){
-                    $('#helper_id').append('<option class="bold" value="'+helperObj.id+'">'+helperObj.name+ ' '+helperObj.phone+'</option>')
-                });
+                // $('#helper_id').append('<option value="">Select One</option>')
+                // $.each(helper,function (index,helperObj){
+                //     $('#helper_id').append('<option class="bold" value="'+helperObj.id+'">'+helperObj.name+ ' '+helperObj.phone+'</option>')
+                // });
 
                 //bus
                 $('#bus_id').append('<option value="">Select One</option>')

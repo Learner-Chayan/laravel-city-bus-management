@@ -10,6 +10,7 @@ use App\Models\Bus;
 use App\Models\UserDetails;
 use App\Models\Ticket_sale;
 use Illuminate\Http\Request;
+use App\User;
 use PDF;
 use DB;
 
@@ -258,6 +259,11 @@ class TicketController extends Controller
 
     public function ticketOptions($trip_id){
 
+
+        if($trip_id < 1 || !is_numeric($trip_id)){
+            return view('404');
+        }
+
         $trip = Trip::findOrFail($trip_id);
         $stoppages = Stopage::latest()->get();
         $route = Route::findOrFail($trip->route);
@@ -332,19 +338,20 @@ class TicketController extends Controller
        
 
         if($trip_id < 1 || !is_numeric($trip_id)){
-            return "Invalid Trip";
+            return view('404');
         }
 
         $ticket_sales = Ticket_sale::where('trip_id',$trip_id)->orderBy('id','DESC')->get();
         $page_title = "Tickets List";
 
         for($i=0; count($ticket_sales)>$i; $i++) {
-            $trip_info = Trip::where('id',$ticket_sales[$i]->trip_id)->first();
-            $ticket_sales[$i]->trip_info = $trip_info;
+            //$trip_info = Trip::where('id',$ticket_sales[$i]->trip_id)->first();
+            //$ticket_sales[$i]->trip_info = $trip_info;
 
             //stoppage name
             $ticket_sales[$i]->from = Stopage::where('id',$ticket_sales[$i]->from)->first()->name;
             $ticket_sales[$i]->to = Stopage::where('id',$ticket_sales[$i]->to)->first()->name;
+            $ticket_sales[$i]->issued_by = User::where('id',$ticket_sales[$i]->issued_by)->first()->name;
         }
 
         return view('admin.serve-ticket.tickets-list',compact('ticket_sales','page_title', 'trip_id'));
@@ -354,7 +361,8 @@ class TicketController extends Controller
         
         $ticket = Ticket_sale::findOrFail($ticket_id);
         $ticket->update([
-            'status' => 1
+            'status' => 1,
+            'payment_by' => 'On cash'
         ]);
 
         return redirect()->back()->with('message', 'Ticket confirmed successfully !!');
