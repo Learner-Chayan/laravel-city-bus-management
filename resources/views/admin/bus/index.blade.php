@@ -124,7 +124,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="submit" class="btn btn-primary submit_btn">Save  </button>
                     </div>
                 </div>
             </form>
@@ -184,7 +184,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Update</button>
+                        <button type="submit" class="btn btn-primary submit_btn">Update</button>
                     </div>
                 </div>
             </form>
@@ -206,6 +206,7 @@
 
             //add form
             $("#busForm").on("submit",function(e){
+                makeDisable(true);
                 e.preventDefault();
                 let form = $("#busForm");
                 const formdata = new FormData(form[0]);
@@ -241,6 +242,7 @@
 
             //update form
             $("#updatebusForm").on("submit",function(e){
+                makeDisable(true);
                 e.preventDefault();
                 let form = $("#updatebusForm");
                 const formdata = new FormData(form[0]);

@@ -58,7 +58,7 @@ label{
                                 @for($i=count($from_stoppages)-1; $i>=0 ; $i--)
 
                                     <div class="col-5">
-                                       <label for="from{{$from_stoppages[$i]}}" onclick="calculateFare()"><input type="radio" class="radio" name="from" id="from{{$from_stoppages[$i]}}" value="{{$from_stoppages[$i]}}">
+                                       <label for="from{{$from_stoppages[$i]}}" onclick="calculateFare('from')"><input type="radio" class="radio" name="from" id="from{{$from_stoppages[$i]}}" value="{{$from_stoppages[$i]}}">
                                          {{ $stoppage_details[$from_stoppages[$i]] }} </label >
                                     </div>
                                 @endfor
@@ -75,7 +75,7 @@ label{
                                 @foreach(json_decode($route->stoppage_id) as $stoppage)
 
                                     <div class="col-5">
-                                       <label for="to{{$stoppage}}" onclick="calculateFare()"><input type="radio" class="radio" name="to" id="to{{$stoppage}}" value="{{$stoppage}}">
+                                       <label for="to{{$stoppage}}" onclick="calculateFare('to')"><input type="radio" class="radio" name="to" id="to{{$stoppage}}" value="{{$stoppage}}">
                                          {{ $stoppage_details[$stoppage] }} </label>
                                     </div>
                                 @endforeach
@@ -131,13 +131,33 @@ label{
 </div>
 
 
+<style>
+    input[disabled] {
+        position: relative;
+  height:15px;
+  width: 15px;
+  box-sizing: border-box;
+  margin: 0;
+  &:after {
+    position: absolute;
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color:red;
+
+  }
+    }
+</style>
+
 
 @endsection
 
 @push('js')
     <script>
-        calculateFare();
-        function calculateFare(){
+        calculateFare('from');
+        function calculateFare(clicked){
 
             let from = $("input[name=from]:checked").val();
             let to = $("input[name=to]:checked").val();
@@ -163,6 +183,17 @@ label{
             $("#fare_amount").val(fare_amount);
             $("#from_id").val(from);
             $("#to_id").val(to);
+
+
+            if(clicked == 'from'){
+                // make same stoppage disable
+                $("input[name=to]").prop('checked',false);
+                $("#to"+from).attr('disabled','disabled');
+                if(localStorage.getItem("prevDisabled") && localStorage.getItem("prevDisabled") != from){
+                    $("#to"+localStorage.getItem("prevDisabled")).removeAttr('disabled');
+                }
+                localStorage.setItem("prevDisabled",from);
+            }
 
         }
     </script>

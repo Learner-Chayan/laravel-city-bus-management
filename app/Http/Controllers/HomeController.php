@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Route;
+use App\Models\Bus;
+use App\Models\Owner;
+use App\Models\Ticket_sale;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -21,6 +24,13 @@ class HomeController extends Controller
 
     public function dashboard()
     {
+
+        $data['total_bus'] = Bus::count();
+        $data['total_owner'] = User::where('customer_type',2)->count();
+        $data['total_route'] = User::count();
+        $data['total_ticket_sale'] = Ticket_sale::where('status',1)->sum('fare_amount');
+
+
         $data['page_title'] = "Dashboard";
         $data['routes'] = Route::latest()->get();
         return view('admin.dashboard.dashboard',$data);

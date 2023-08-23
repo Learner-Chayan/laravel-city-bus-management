@@ -10,7 +10,7 @@
                     <form action="{{route('search.trip')}}" method="GET">
                         @csrf
                         <div class="row">
-                                <div class="col-5">
+                                <div class="col-4 offset-4">
                                     <div class="form-group">
                                         <label for="bus-name" class="col-form-label">From:</label>
                                         <select name="from" id="from" class="select2 form-control" style="width: 100%">
@@ -20,8 +20,7 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                </div>
-                                <div class="col-5">
+                                    <br/>
                                     <div class="form-group">
                                         <label for="bus-name" class="col-form-label">To:</label>
                                         <select name="to" id="to" class="select2 form-control" style="width: 100%">
@@ -31,10 +30,15 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                </div>
-                                <div class="col-2">
-                                        <br/>
-                                        <button type="submit" class="btn btn-primary mt-2">Submit</button>
+                                    <br/>
+                                    <div class="form-group">
+                                            <label for="date" class="col-form-label">Date : </label>
+                                             <input name="date" type="date" class="form-control" min="{{  date('Y-m-d') }}">
+                                    </div>
+                                    
+                                    <br/>
+                                      
+                                    <button type="submit" class="btn btn-primary mt-2 btn-block">Submit</button>
                                 </div>
                         </div>
                     </form>
@@ -89,5 +93,9 @@
         $("#to").select2({
             matcher: matchStart
         });
+
+
+
     </script>
+
 @endpush

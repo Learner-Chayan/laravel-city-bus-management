@@ -35,19 +35,31 @@ class TicketController extends Controller
 
     public function searchTrip(Request $request){
 
-        //dd($request);
+        $request->validate([
+            'to' => 'required',
+            'from' => 'required',
+            'date' => 'required'
+        ]);
+
+       // dd($request);
         $page_title = "Trip List";
         $route_id = $this->getRoute($request->from,$request->to);
-//        dd($route_id);
+
 
         if($route_id){
             //get trip info
 
-            $now = date("Y-m-d H:i:s");
-            //dd($now);
-            $trips = Trip::where('route',$route_id)
-                          ->where('start_time', '>',$now)
+            $date_start = date("$request->date 00:00:01");
+            $date_end = date("$request->date 23:59:59");
+
+ 
+            $trips = Trip::with('bus')->where('route',$route_id)
+            //$trips = Trip::where('route',$route_id)
+                          ->where('start_time', '>',$date_start)
+                          ->where('start_time', '<',$date_end)
                             ->get();
+
+                           
             if(count($trips)){
                 //dd($trip);
 
@@ -152,7 +164,7 @@ class TicketController extends Controller
         $bus = Bus::findOrFail($trip->bus_id);
 
         // make unique ticket serial number
-        $serial = substr(md5(time()), 0, 10);
+        $serial = substr(md5(time().rand(1,999999)), 0, 10);
 
         //check who cutting the ticket
 

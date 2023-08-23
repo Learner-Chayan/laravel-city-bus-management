@@ -41,7 +41,10 @@
                                 <div class="form-group">
                                     <label for="driver" class="col-form-label">Driver:</label>
                                     <select class="form-control select2" style="width: 100%" id="driver_id" name="driver_id">
-
+                                        <option value="">Select One</option>
+                                        @foreach($drivers as $driver)
+                                            <option value="{{$driver->id}}">{{$driver->name}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -49,13 +52,19 @@
                                 <div class="form-group">
                                     <label for="helper" class="col-form-label">Helper:</label>
                                     <select class="form-control select2" style="width: 100%" id="helper_id" name="helper_id">
-
+                                        <option value="">Select One</option>
+                                        @foreach($helpers as $helper)
+                                            <option value="{{$helper->id}}">{{$helper->name}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="Contractor" class="col-form-label">Conductor:</label>
                                     <select class="form-control select2" style="width: 100%" id="checker_id" name="checker_id">
-
+                                    <option value="">Select One</option>
+                                        @foreach($checkers as $checker)
+                                            <option value="{{$checker->id}}">{{$checker->name}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -91,42 +100,36 @@
 @push('js')
     <script>
         $('#owner_id').on('change',function (e){
+
             let ownerId = e.target.value;
-            let url = "{{url('/')}}";
+            const buses = {!! $buses !!};
 
-            $.get(url + '/get-owner-employee?owner_id=' + ownerId,function (data){
-                let driver = data.driver;
-                let checker = data.checker;
-                let helper = data.helper;
-                let bus = data.bus;
+            $('#bus_id').empty();
+            $('#bus_id').append('<option value="">Select One</option>')
+            for (let i = 0; i < buses.length; i++) {
+                const bus = buses[i];
+                if(bus.owner_id == ownerId){
+                 $('#bus_id').append('<option class="bold" value="'+bus.id+'">'+bus.name+ ' '+bus.coach_number+'</option>');
+                }
+            }
 
-                $('#driver_id').empty();
-                $('#checker_id').empty();
-                $('#helper_id').empty();
-                $('#bus_id').empty();
-                //driver
-                $('#driver_id').append('<option value="">Select One</option>')
-                $.each(driver,function (index,driverObj){
-                    $('#driver_id').append('<option class="bold" value="'+driverObj.id+'">'+driverObj.name+ ' '+driverObj.phone+'</option>')
-                });
-                //checker
-                $('#checker_id').append('<option value="">Select One</option>')
-                $.each(checker,function (index,checkerObj){
-                    $('#checker_id').append('<option class="bold" value="'+checkerObj.id+'">'+checkerObj.name+ ' '+checkerObj.phone+'</option>')
-                });
 
-                //helper
-                $('#helper_id').append('<option value="">Select One</option>')
-                $.each(helper,function (index,helperObj){
-                    $('#helper_id').append('<option class="bold" value="'+helperObj.id+'">'+helperObj.name+ ' '+helperObj.phone+'</option>')
-                });
+            //  let ownerId = e.target.value;
+            //  let url = "{{url('/')}}";
+            //  $('#bus_id').empty();
 
-                //bus
-                $('#bus_id').append('<option value="">Select One</option>')
-                $.each(bus,function (index,busObj){
-                    $('#bus_id').append('<option class="bold" value="'+busObj.id+'">'+busObj.name+ ' '+busObj.coach_number+'</option>')
-                });
-            })
+            //  $.get(url + '/get-owner-employee?owner_id=' + ownerId,function (data){
+
+            //      let bus = data.bus;
+
+            //     $('#bus_id').empty();
+
+            //     //bus
+            //     $('#bus_id').append('<option value="">Select One</option>')
+            //     $.each(bus,function (index,busObj){
+            //         $('#bus_id').append('<option class="bold" value="'+busObj.id+'">'+busObj.name+ ' '+busObj.coach_number+'</option>')
+            //     });
+            //  })
         });
         function busSelected(buses){
             //console.log(buses);
