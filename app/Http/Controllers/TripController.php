@@ -22,7 +22,14 @@ class TripController extends Controller
         $user = Auth::user();
         if ($user->hasRole('admin')){
             $data['trips'] = Trip::with('bus','driver','helper','checker')->latest()->get();
-        }else{
+        }else if($user->hasRole('checker')){
+            $data['trips'] = Trip::with('bus','driver','helper','checker')->where('checker_id',$user->id)->latest()->get();
+        }else if($user->hasRole('helper')){
+            $data['trips'] = Trip::with('bus','driver','helper','checker')->where('helper_id',$user->id)->latest()->get();
+        }else if($user->hasRole('driver')){
+            $data['trips'] = Trip::with('bus','driver','helper','checker')->where('driver_id',$user->id)->latest()->get();
+        }
+        else{
             $data['trips'] = Trip::with('bus','driver','helper','checker')->where('owner_id',$user->id)->latest()->get();
 
         }
@@ -51,6 +58,8 @@ class TripController extends Controller
         $data['drivers'] = User::latest()->where('customer_type',3)->get();//driver
         $data['checkers'] = User::latest()->where('customer_type',4)->get();//checker
         $data['helpers'] = User::latest()->where('customer_type',6)->get();// helper
+
+        /// admin = 1 , owner = 2 , driver = 3, checker = 4 , customer = 5 , helper = 6
 
         //dd($data['routes'][1]);
         return view('admin.trip.create',$data);
@@ -102,12 +111,26 @@ class TripController extends Controller
             $data['owners'] = User::latest()->where('customer_type',2)->where('id','=',$user->id)->get(); //owner
 
         }
-        $employees = UserDetails::where('owner_id',$data['trip']->owner_id)->get();
+
+
         $driver = [];
         $checker = [];
         $helper = [];
-        foreach ($employees as $employee){
-            $em = \App\User::findOrFail($employee->user_id);
+
+        //$employees = UserDetails::where('owner_id',$data['trip']->owner_id)->get();
+        // foreach ($employees as $employee){
+        //     $em = \App\User::findOrFail($employee->user_id);
+        //     if ($em->customer_type == 3){
+        //         $driver[] = $em;
+        //     }elseif ($em->customer_type == 4){
+        //         $checker[] = $em;
+        //     }else{
+        //         $helper[] = $em;
+        //     }
+        // }
+
+        $employees = User::all();
+        foreach ($employees as $em){
             if ($em->customer_type == 3){
                 $driver[] = $em;
             }elseif ($em->customer_type == 4){
@@ -116,6 +139,10 @@ class TripController extends Controller
                 $helper[] = $em;
             }
         }
+
+
+
+
         $data['drivers'] = $driver;
         $data['checkers'] = $checker;
         $data['helpers'] = $helper;

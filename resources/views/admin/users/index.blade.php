@@ -13,7 +13,7 @@
                             <thead>
                                 <tr>
                                     <th class="text-bold text-uppercase">#SL</th>
-                                    <th class="text-bold text-uppercase">User Name</th>
+                                    <th class="text-bold text-uppercase"> Name</th>
                                     <th class="text-bold text-uppercase">User Image</th>
                                     <th class="text-bold text-uppercase">User Email</th>
                                     <th class="text-bold text-uppercase">User Phone</th>
@@ -47,9 +47,7 @@
                                         <td>
                                             @if($user->id !== 1)
                                                 <a class="btn btn-sm btn-primary fa fa-edit" href="{{ route('users.edit',$user->id) }}"> Edit</a>
-                                                @can('delete')
                                                     {!! Form::button('<i class="fa fa-trash"></i> Delete', ['class' => 'btn btn-sm btn-danger bold uppercase delete_button','data-toggle'=>"modal",'data-target'=>"#DelModal",'data-id'=>$user->id]) !!}
-                                                @endcan
                                             @endif
                                         </td>
                                     </tr>

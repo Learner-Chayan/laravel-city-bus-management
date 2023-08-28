@@ -7,8 +7,10 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">{{$page_title}}</h4>
-{{--                    <button class="btn btn-primary uppercase text-bold float-right" data-toggle="modal" data-target="#addModal"> New trip</button>--}}
+
+                    @role('admin')
                     <a href="{{route('trip.create')}}" class="btn btn-primary uppercase text-bold float-right"> New trip</a>
+                    @endrole
                     <div class="table-responsive">
                         <table id="example" class="table table-striped table-bordered zero-configuration">
                             <thead>
@@ -34,30 +36,39 @@
                                 <tr>
                                     <td>{{ ++$key }}</td>
                                     <td>
-                                        @foreach($stoppages as $stoppage)
+                                      
+                                        @for($i=count($stoppages)-1; $i>=0; $i--)
 
                                           @php(
-                                           $stoppageName =  \App\Models\Stopage::where('id',$stoppage)->first()->name
+                                           $stoppageName =  \App\Models\Stopage::where('id',$stoppages[$i])->first()->name
                                           )
 
                                           <li>{{$stoppageName}}</li>
-                                        @endforeach
+                                        @endfor
                                     </td>
                                     <td>{{ \Carbon\Carbon::parse($trip->start_time)->format('d M,Y H:i a') }}</td>
                                     <td>{{ \Carbon\Carbon::parse($trip->end_time)->format('d M,Y H:i a') }}</td>
                                     <td>{{ $routesArr[$trip->route] }}</td>
-                                    <td>{{ $trip->bus->name}} <br> CN-{{$trip->bus->coach_number}} <br> Seat-{{ $trip->total_seat }}</td>
+                                    <td>{{ $trip->bus->name}} <br> Coach No-{{$trip->bus->coach_number}} <br> Seat-{{ $trip->total_seat }}</td>
                                     <td>Driver-<strong>{{ $trip->driver->name }}</strong>  <br> Checker-<strong>{{ $trip->checker->name }}</strong> <br> Helper-<strong>{{ $trip->helper->name }}</strong></td>
                                     <td>
-{{--                                        <button class="btn btn-sm btn-primary fa fa-edit" data-toggle="modal" data-target="#editModal" onclick="showFormData({{$trip}})"> Edit</button>--}}
+                                        @role('admin')
                                         <a href="{{route('trip.edit',$trip->id)}}" class="btn btn-sm btn-primary fa fa-edit" > Edit</a>
-                                         @role('admin|owner')
-                                            {!! Form::button('<i class="fa fa-trash"></i> Delete', ['class' => 'btn btn-sm btn-danger bold uppercase delete_button','data-toggle'=>"modal",'data-target'=>"#DelModal",'data-id'=>$trip->id]) !!}
                                         @endrole
+                                        @role('admin')
+                                            {!! Form::button('<i class="fa fa-trash"></i> Delete', ['class' => 'btn btn-sm btn-danger bold uppercase delete_button','data-toggle'=>"modal",'data-target'=>"#DelModal",'data-id'=>$trip->id]) !!}
+                                         @endrole
 
+                                         @role('admin|checker')
                                         <a href="{{ route('serve.ticket',$trip->id)}}" class="btn btn-primary btn-sm">
                                             Tickets
                                         </a>
+                                        @endrole
+                                        @role('admin|owner|helper|driver|checker')
+                                        <a href="{{ route('trip.receipts',$trip->id)}}" class="btn btn-success btn-sm">
+                                            Receipts
+                                        </a>
+                                        @endrole
                                     </td>
                                 </tr>
                             @endforeach

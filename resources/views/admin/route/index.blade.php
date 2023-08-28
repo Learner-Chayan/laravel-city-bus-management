@@ -26,17 +26,18 @@
                                     <td>{{ $route->name }}</td>
                                     <td>
                                         <ol>
-                                            @foreach($stoppageIds as $key => $stop)
-                                                @php($stoppage = \App\Models\Stopage::findOrFail($stop))
+                                            @for($i=count($stoppageIds)-1; $i>=0; $i--)
+                                                @php($stoppage = \App\Models\Stopage::findOrFail($stoppageIds[$i]))
                                                     <li>{{$stoppage->name}}</li>
-                                            @endforeach
+                                            @endfor
                                         </ol>
                                     </td>
                                     <td>
-                                        <button class="btn btn-sm btn-primary fa fa-edit" data-toggle="modal" data-target="#editModal" onclick="showFormData({{$route}})"> Edit</button>
-                                        @can('destroy')
+                                        <button class="btn btn-sm btn-primary fa fa-edit" data-toggle="modal" data-target="#editModal" onclick="showFormData({{$route}}, {{ json_encode($stoppages) }})"> Edit</button>
+                                       
                                             {!! Form::button('<i class="fa fa-trash"></i> Delete', ['class' => 'btn btn-sm btn-danger bold uppercase delete_button','data-toggle'=>"modal",'data-target'=>"#DelModal",'data-id'=>$route->id]) !!}
-                                        @endcan
+                                         <!-- @can('destroy') -->
+                                            <!-- @endcan -->
                                     </td>
                                 </tr>
                             @endforeach
@@ -92,7 +93,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="status" class="col-form-label">Stoppage:</label>
+                                <label for="status" class="col-form-label">Stoppage: [ <b class="text-info"> Insert from last stoppage </b>]</label>
                                 <select id="stoppage_id" class="form-control select2" name="stoppage_id[]" multiple style="width: 100%" >
                                     @foreach($stoppages as $stoppage)
 
@@ -131,11 +132,12 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="status" class="col-form-label">Stoppage:</label>
+                            <label for="status" class="col-form-label">Stoppages: [ <b class="text-info"> Insert from last stoppage </b> ]</label>
+                            <p id="selected_stoppages"></p>
                             <select id="editStoppage_id" class="form-control select2" name="stoppage_id[]" multiple style="width: 100%">
-                                @foreach($stoppages as $stoppage)
-                                    <option value="{{$stoppage->id}}">{{$stoppage->name}}<option>
-                                @endforeach
+                                @for($i=count($stoppages)-1; $i>=0; $i--)
+                                    <option value="{{$stoppages[$i]->id}}">{{$stoppages[$i]->name}}<option>
+                                @endfor
                             </select>
                             <p class="text-danger" id="error"></p>
                             <p class="text-success" id="success"></p>
@@ -244,15 +246,37 @@
 
          });
 
-        function showFormData(data){
+        function showFormData(data,all_stoppages){
 
-            let stoppage_ids = JSON.parse(data.stoppage_id);
-            $('#editStoppage_id').val(stoppage_ids).trigger('change');
+           // console.log(all_stoppages);
+
+            let selected_stoppage_ids = JSON.parse(data.stoppage_id);
+            $('#editStoppage_id').val(0).trigger('change');
+            //$('#editStoppage_id').val(selected_stoppage_ids).trigger('change');
 
              $("#route_id").val(data.id);
              $("#edit-route-name").val(data.name);
             // $("#edit-reg-number").val(data.reg_number);
             // $("#edit-reg-last-date").val(data.reg_last_date);
+
+
+            // show stoppages
+            let stoppagesList = "";
+            for(let i=selected_stoppage_ids.length - 1; i>=0;i--){
+
+                for(let j=0; j<all_stoppages.length; j++){
+                    if(selected_stoppage_ids[i] == all_stoppages[j].id){
+                        if(i != selected_stoppage_ids.length -1){ 
+                            stoppagesList += " ==> ";
+                        }
+                        stoppagesList += " <b>"+all_stoppages[j].name+"</b>";
+                        break;
+                    }
+                }
+            }
+
+           // console.log(stoppagesList);
+            $("#selected_stoppages").html(stoppagesList);
 
         }
 

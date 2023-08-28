@@ -37,7 +37,7 @@
 
 {{--                                        @endphp--}}
                                     </h6>
-                                    <p>Trip Start : {{ $trip->start_time }}</p>
+                                    <p>Trip Start : {{ \Carbon\Carbon::parse($trip->start_time)->format('d M ,  Y H:i a') }}</p>
                                 </div>
                                 <div class="col-6">
                                     <h6>Seat available : {{$trip->total_seat}}</h6>
@@ -97,6 +97,8 @@
                                 <input type="hidden" name="payment_by" value="Pay later">
                                 <input type="hidden" name="ticketing_by" value="self">
                                 <input type="hidden" name="isStudent" value="0">
+                                <input type="hidden" name="status" value="0">
+                                <!-- Status 0 means ticket not confirmed and not paid  yet-->
                             </div>
                         </div>
                     </div>

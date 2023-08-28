@@ -10,6 +10,7 @@ use App\Models\Bus;
 use App\Models\UserDetails;
 use App\Models\Ticket_sale;
 use Illuminate\Http\Request;
+use App\User;
 use PDF;
 use DB;
 
@@ -34,19 +35,31 @@ class TicketController extends Controller
 
     public function searchTrip(Request $request){
 
-        //dd($request);
+        $request->validate([
+            'to' => 'required',
+            'from' => 'required',
+            'date' => 'required'
+        ]);
+
+       // dd($request);
         $page_title = "Trip List";
         $route_id = $this->getRoute($request->from,$request->to);
-//        dd($route_id);
+
 
         if($route_id){
             //get trip info
 
-            $now = date("Y-m-d H:i:s");
-            //dd($now);
-            $trips = Trip::where('route',$route_id)
-                          ->where('start_time', '>',$now)
+            $date_start = date("$request->date 00:00:01");
+            $date_end = date("$request->date 23:59:59");
+
+ 
+            $trips = Trip::with('bus')->where('route',$route_id)
+            //$trips = Trip::where('route',$route_id)
+                          ->where('start_time', '>',$date_start)
+                          ->where('start_time', '<',$date_end)
                             ->get();
+
+                           
             if(count($trips)){
                 //dd($trip);
 
@@ -130,8 +143,11 @@ class TicketController extends Controller
 
     public function ticketConfirmation(Request $request){
 
+
         $request->validate([
-            'totalTicket' => 'required'
+            'totalTicket' => 'required',
+            'from_id' => 'required',
+            'to_id' => 'required'
         ]);
 
         $trip = Trip::where('id',$request->trip_id)->first();
@@ -144,17 +160,11 @@ class TicketController extends Controller
         $fare_amount_total = $request->totalTicket * $request->fare_amount;
         $user = auth()->user();
 
-        // make unique ticket serial number
+        
         $bus = Bus::findOrFail($trip->bus_id);
-        $ticketId = Ticket_sale::latest()->first();
-        if ($ticketId)
-        {
-            $serial = date('dmY').$bus->id.$ticketId->id;
-        }
-        else{
-            $tId = 1;
-            $serial = date('dmY').$bus->id.$tId;
-        }
+
+        // make unique ticket serial number
+        $serial = substr(md5(time().rand(1,999999)), 0, 10);
 
         //check who cutting the ticket
 
@@ -169,6 +179,7 @@ class TicketController extends Controller
             "total_seat"=> $request->totalTicket,
             "payment_by"=> $request->payment_by,
             "isStudent"=> $request->isStudent,
+            "status"=> $request->status,
         ]);
 
 
@@ -211,7 +222,7 @@ class TicketController extends Controller
 
     public function purchaseHistory(){
         $user = auth()->user();
-        $ticket_sales = Ticket_sale::where('issued_by',$user->id)->get();
+        $ticket_sales = Ticket_sale::where('issued_by',$user->id)->orderBy('id','DESC')->get();
         $page_title = "Purchase History";
 
         for($i=0; count($ticket_sales)>$i; $i++) {
@@ -260,6 +271,11 @@ class TicketController extends Controller
 
     public function ticketOptions($trip_id){
 
+
+        if($trip_id < 1 || !is_numeric($trip_id)){
+            return view('404');
+        }
+
         $trip = Trip::findOrFail($trip_id);
         $stoppages = Stopage::latest()->get();
         $route = Route::findOrFail($trip->route);
@@ -276,6 +292,10 @@ class TicketController extends Controller
         $data['fares'] = $fares;
         $data['route'] = $route;
         $data['stoppage_details'] = $stoppage_details;
+
+        if(!$fares){
+            return redirect()->back()->with('error','Fare is not calculated yet !!');
+        }
 
         return view('admin.serve-ticket.index', $data);
     }
@@ -322,5 +342,41 @@ class TicketController extends Controller
         }else{
             return redirect()->back()->with('error', 'Ticket not found');
         }
+    }
+
+
+    //trip tickets 
+    public function showTripTickets($trip_id){
+       
+
+        if($trip_id < 1 || !is_numeric($trip_id)){
+            return view('404');
+        }
+
+        $ticket_sales = Ticket_sale::where('trip_id',$trip_id)->orderBy('id','DESC')->get();
+        $page_title = "Tickets List";
+
+        for($i=0; count($ticket_sales)>$i; $i++) {
+            //$trip_info = Trip::where('id',$ticket_sales[$i]->trip_id)->first();
+            //$ticket_sales[$i]->trip_info = $trip_info;
+
+            //stoppage name
+            $ticket_sales[$i]->from = Stopage::where('id',$ticket_sales[$i]->from)->first()->name;
+            $ticket_sales[$i]->to = Stopage::where('id',$ticket_sales[$i]->to)->first()->name;
+            $ticket_sales[$i]->issued_by = User::where('id',$ticket_sales[$i]->issued_by)->first()->name;
+        }
+
+        return view('admin.serve-ticket.tickets-list',compact('ticket_sales','page_title', 'trip_id'));
+    }
+
+    public function ticketStatusUpdate($ticket_id){
+        
+        $ticket = Ticket_sale::findOrFail($ticket_id);
+        $ticket->update([
+            'status' => 1,
+            'payment_by' => 'On cash'
+        ]);
+
+        return redirect()->back()->with('message', 'Ticket confirmed successfully !!');
     }
 }

@@ -101,7 +101,7 @@ class RouteController extends Controller
         $route = Route::findOrFail($request->id);
         $valid = $this->validate($request,[
             'name' => 'required|unique:routes,name,'.$route->id,
-            'stoppage_id.*' => 'required',
+           // 'stoppage_id.*' => 'required',
         ]);
         if (!$valid){
             return response()->json($valid);
@@ -109,7 +109,11 @@ class RouteController extends Controller
 
         $in = $request->except('stoppage_id');
         $stoppage_id = $request->input('stoppage_id');
-        $in["stoppage_id"] = json_encode($stoppage_id);
+
+        if($stoppage_id != null){
+            $in["stoppage_id"] = json_encode($stoppage_id);
+        }
+
         $route->fill($in)->save();
         return response()->json();
 

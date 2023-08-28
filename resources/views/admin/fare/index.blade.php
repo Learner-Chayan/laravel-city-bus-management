@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
-                <div class="card-body">
+                <div class="card-body" style="overflow-x:scroll">
                     <div class="">
 
                         <form  action="" method="GET">
@@ -39,7 +39,7 @@
 
                                 <input type="hidden" name="route_id" value="{{$selected_route->id}}">
                                 @csrf
-                                <table class="table table-striped">
+                                <table class="table table-striped" >
                                     @foreach($stoppages as $stoppage)
 
 
@@ -61,7 +61,7 @@
                                         <tr>
                                             <td> {{ $stoppages_arr[$stoppage] }}</td>
                                             @foreach($stoppages as $stoppage2)
-                                                <td>
+                                                <td style="min-width:80px">
 
                                                     <input class="form-control" type="text" name="fare_{{$selected_route->id}}_{{$stoppage}}_{{$stoppage2}}"
                                                    @if($stoppage == $stoppage2) value="0" readonly

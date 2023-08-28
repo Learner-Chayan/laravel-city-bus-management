@@ -104,22 +104,23 @@ class PaymentController extends Controller
             }else if(isset($allRequest['status']) && $allRequest['status'] == 'cancel'){
                 //save payment cancel
                 $ticket_sale->update(
-                    ['payment_by' => 'Payment cancel']
+                    ['payment_by' => 'Payment canceled']
                 );
-                return redirect('admin/purchase-history')->with('error', 'Payment canceled but your ticket purchased successfully!!');
+                return redirect('admin/purchase-history')->with('message', 'Payment canceled but your ticket purchased successfully!!');
             }else{
                 //save payment success
                 $paymentID = $allRequest['paymentID'];
                 $ticket_sale->update([
                     'payment_by' => 'Bkash',
-                    'transaction_id' => $paymentID
+                    'transaction_id' => $paymentID,
+                    'status' => 1, // status 1 means ticket confirmed and paid.
                 ]);
 
-                return redirect('admin/purchase-history')->with('success', 'Payment success and your ticket purchased successfully!!');
+                return redirect('admin/purchase-history')->with('message', 'Payment success and your ticket purchased successfully!!');
             }
         }else{
             // ticket okay, but unkown about payment .
-            return redirect('admin/purchase-history')->with('success', 'Your ticket purchased successfully!! If any wrong , contact with us');
+            return redirect('admin/purchase-history')->with('message', 'Your ticket purchased successfully!! If any wrong , contact with us');
         }
 
     }

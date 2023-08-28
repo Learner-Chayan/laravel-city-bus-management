@@ -34,7 +34,9 @@
                             <label class="text-bold text-uppercase">Assign Role</label>
                             <select name="roles" class="form-control select2" required data-placeholder="Select a Role" >
                                 @foreach($roles as $role)
+                                    @if($role->name !='helper' && $role->name !='driver' && $role->name !='checker')
                                     <option value="{{$role->id}}" {{ $user->roles()->pluck('name')->implode(' , ') == $role->name ? 'selected' : '' }}>{!! $role->name !!}</option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>

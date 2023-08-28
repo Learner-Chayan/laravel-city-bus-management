@@ -33,7 +33,8 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|same:confirm-password',
         ]);
@@ -41,11 +42,24 @@ class UserController extends Controller
         $tem = $request->password;
         $input = $request->all();
         $input['temp_password'] = $tem;
+        $input['name'] = $input['first_name']." ".$input['last_name'];
+
+        //admin = 1 , owner = 2 , driver = 3, checker = 4 , customer = 5 , helper = 6
         if ($role == 'admin'){
             $input['customer_type'] = 1;
         }
-        elseif ($role == 'delivery-boy') {
+        elseif ($role == 'owner') {
             $input['customer_type'] = 2;
+        }
+        elseif ($role == 'driver') {
+            $input['customer_type'] = 3;
+        }elseif ($role == 'checker') {
+            $input['customer_type'] = 4;
+        }elseif ($role == 'helper') {
+            $input['customer_type'] = 6;
+        }else{
+            //customer
+            $input['customer_type'] = 5;
         }
 
 

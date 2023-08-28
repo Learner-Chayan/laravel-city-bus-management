@@ -36,9 +36,9 @@
                                     <td><img width="50" src="{{asset("public/images/bus/$bus->reg_image")}}" alt="buss number plate image"></td>
                                     <td>
                                         <button class="btn btn-sm btn-primary fa fa-edit" data-toggle="modal" data-target="#editModal" onclick="showFormData({{$bus}})"> Edit</button>
-                                        @can('destroy')
+                                        @role('admin|owner')
                                             {!! Form::button('<i class="fa fa-trash"></i> Delete', ['class' => 'btn btn-sm btn-danger bold uppercase delete_button','data-toggle'=>"modal",'data-target'=>"#DelModal",'data-id'=>$bus->id]) !!}
-                                        @endcan
+                                        @endrole
                                     </td>
                                 </tr>
                             @endforeach
@@ -124,7 +124,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="submit" class="btn btn-primary submit_btn">Save  </button>
                     </div>
                 </div>
             </form>
@@ -184,7 +184,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Update</button>
+                        <button type="submit" class="btn btn-primary submit_btn">Update</button>
                     </div>
                 </div>
             </form>
@@ -206,6 +206,7 @@
 
             //add form
             $("#busForm").on("submit",function(e){
+                makeDisable(true);
                 e.preventDefault();
                 let form = $("#busForm");
                 const formdata = new FormData(form[0]);
@@ -241,6 +242,7 @@
 
             //update form
             $("#updatebusForm").on("submit",function(e){
+                makeDisable(true);
                 e.preventDefault();
                 let form = $("#updatebusForm");
                 const formdata = new FormData(form[0]);

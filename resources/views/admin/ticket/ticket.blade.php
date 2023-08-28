@@ -42,14 +42,14 @@
         <p>Ticket Number-{{$ticket->serial}}</p>
     </div>
 <pre>
-Journey Date:{{\Carbon\Carbon::parse($ticket->trip_info->start_time)->format('d M,Y H:i a') }}
-Bus Name:{{$ticket->bus->name}} ({{$ticket->bus->coach_number}})
-Issued by :{{$issued_by}}
-Form:{{$ticket->from}}
-To:{{$ticket->to}}
-Fare : {{$ticket->fare_amount}} BDT ({{$ticket->payment_by}})
+<b>{{$ticket->from}} </b> To <b> {{$ticket->to}} </b>
+Journey Date:{{\Carbon\Carbon::parse($ticket->trip_info->start_time)->format('d M,Y H:i a') }} 
+Bus Name : <b> {{$ticket->bus->name}} ({{$ticket->bus->coach_number}}) </b>
+Issued by : <b> {{$issued_by}} </b>
+Fare:<b>{{$ticket->fare_amount}} BDT({{$ticket->payment_by}}) </b>
+Total seat : <b> {{$ticket->total_seat}}  </b>
 @if($ticket->isStudent)
-Passenger type : Student
+Passenger type : <b> Student </b>
 @endif
 </pre>
     <div class="barcode">
