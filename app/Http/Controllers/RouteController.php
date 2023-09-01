@@ -46,7 +46,7 @@ class RouteController extends Controller
     {
         $valid = $this->validate($request,[
             'name' => 'required|unique:routes,name',
-            'stoppage_id.*' => 'required',
+            'stoppage_id' => 'required',
         ]);
         if (!$valid){
             return response()->json($valid);

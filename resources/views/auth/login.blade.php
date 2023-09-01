@@ -35,9 +35,9 @@
 
         <div>
             <button type="button" class="btn btn-primary btn-sm" onclick="fillLoginForm('admin@gmail.com','12345678')">Admin</button>
-            <button type="button" class="btn btn-info btn-sm" onclick="fillLoginForm('owner@gmail.com','12345678')">Owner</button>
+            <button type="button" class="btn btn-info btn-sm" onclick="fillLoginForm('owner@gmail.com','123456')">Owner</button>
             <button type="button" class="btn btn-success btn-sm" onclick="fillLoginForm('customer@gmail.com','12345678')">Customer</button>
-            <button type="button" class="btn btn-danger btn-sm" onclick="fillLoginForm('checker@gmail.com','12345678')">Checker</button>
+            <button type="button" class="btn btn-danger btn-sm" onclick="fillLoginForm('checker@gmail.com','123456')">Checker</button>
         </div>
     </div>
 @endsection

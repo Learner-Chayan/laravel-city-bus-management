@@ -24,7 +24,7 @@ return new class extends Migration
             $table->integer('checker_id'); // change it integer later
             $table->integer('bus_id');
             $table->integer('total_seat');
-            $table->string('type');
+            $table->string('type')->nullable();
             $table->timestamps();
         });
     }

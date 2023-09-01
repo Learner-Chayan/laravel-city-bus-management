@@ -163,6 +163,8 @@ label{
             let to = $("input[name=to]:checked").val();
             let isStudent = $("#isStudentCheckbox").is(":checked");
 
+   
+
 
             let fares = {!!  $fares->price !!} ;
             let route = {!!  $route->id !!} ;
@@ -176,6 +178,7 @@ label{
                 $("#isStudent").val(1);
             }else{
                 $("#fare_amount_show").text(fare_amount ? fare_amount : 0);
+                $("#isStudent").val(0);
             }
 
 

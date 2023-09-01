@@ -104,8 +104,8 @@
                     </div>
                     <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                            <button type="submit" class="btn btn-success "><i class="fa fa-check"></i> CONFIRM</button>
-
+                            <button id="confirm_btn" onclick="showLoading()" type="submit" class="btn btn-success "><i class="fa fa-check"></i> CONFIRM</button>
+                            <img class="d-none" id="loading_img" src="{{asset('public/assets/admin/loading.gif')}}" width="60" height="60" alt="loading">
                     </div>
                 </div>
              </form>
@@ -129,6 +129,11 @@
             function calculateFare(){
                 let ticketNum = $("#totalTicket").val();
                 $("#fare_amount_calculation").val(ticketNum * <?php echo $fare_amount ?>);
+            }
+
+            function showLoading(){
+                $("#confirm_btn").hide();
+                $("#loading_img").removeClass('d-none');
             }
         </script>
 @endpush

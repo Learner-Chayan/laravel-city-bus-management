@@ -29,9 +29,11 @@ class DriverController extends Controller
             $drivers = [];
             $userDetails = \App\Models\UserDetails::where('owner_id',$user->id)->get();
             foreach ($userDetails as $em){
-                $employee = User::findOrFail($em->user_id);
-                if ($employee->customer_type == 3){
-                    $drivers[] = $employee;
+                $employee = User::find($em->user_id);
+                if($employee){
+                    if ($employee->customer_type == 3){
+                        $drivers[] = $employee;
+                    }
                 }
             }
             $data['drivers'] = $drivers;
