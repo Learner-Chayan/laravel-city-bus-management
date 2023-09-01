@@ -92,7 +92,6 @@ class TripController extends Controller
             'checker_id' => $request->checker_id,
             'bus_id' => $request->bus_id,
             'total_seat' => $request->total_seat,
-            'trip_type' => $request->trip_type,
             'owner_id' => $request->owner_id,
         ]);
         session()->flash('message','Trip Created successfully !!');
