@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="{{asset('public/assets/admin/file/bootstrap-fileinput.css')}}">
     <!-- summer note css -->
     <link rel="stylesheet" href="{{asset('public/assets/admin/plugins/summernote/dist/summernote.css')}}">
+     <!-- date time -->
+    <link rel="stylesheet" href="{{asset('public/assets/admin/plugins/datetime/jquery.simple-dtpicker.css')}}">
     <!-- data table -->
     <link rel="stylesheet" href="{{asset('public/assets/admin/advanceTable/datatable.min.css')}}">
     <link rel="stylesheet" href="{{asset('public/assets/admin/advanceTable/datatable.button.min.css')}}">
@@ -121,6 +123,9 @@
 
 <!-- File js -->
 <script src="{{asset('public/assets/admin/file/bootstrap-fileinput.js')}}"></script>
+
+<!-- summer note js -->
+<script src="{{asset('public/assets/admin/plugins/datetime/jquery.simple-dtpicker.js')}}"></script>
 <!-- summer note js -->
 <script src="{{asset('public/assets/admin/plugins/summernote/dist/summernote.min.js')}}"></script>
 <script src="{{asset('public/assets/admin/plugins/summernote/dist/summernote-init.js')}}"></script>

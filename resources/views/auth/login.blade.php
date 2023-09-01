@@ -16,17 +16,43 @@
             {{ csrf_field() }}
 
             <div class="form-group">
-                <input type="email" class="form-control" name="email" required placeholder="Enter Your Email">
+                <input type="email" class="form-control" name="email" id="email" required placeholder="Enter Your Email">
             </div>
             <div class="form-group">
-                <input type="password" class="form-control" name="password" required placeholder="Enter Your Password">
+                <input type="password" class="form-control" name="password" id="password" required placeholder="Enter Your Password">
             </div>
             <button type="submit" class="btn login-form__btn submit w-100">Sign In</button>
         </form>
         <p class="mt-5 login-form__footer">
+            
+             <h4><a href="{{route('password.request')}}" class="text-primary">Forgot Password ?</a>
             @if(env('REGISTRATION_STATUS'))
-                <h4><a href="{{route('register')}}" class="text-primary">Customer Registration</a></h4>
+             <a href="{{route('register')}}" class="text-primary float-right">Customer Registration</a>
             @endif
-            &nbsp;  <h4><a href="{{route('password.request')}}" class="text-primary">Forgot Password ?</a> </h4>
+        
+            </h4>
+        </p>
+
+        <div>
+            <button type="button" class="btn btn-primary btn-sm" onclick="fillLoginForm('admin@gmail.com','12345678')">Admin</button>
+            <button type="button" class="btn btn-info btn-sm" onclick="fillLoginForm('owner@gmail.com','12345678')">Owner</button>
+            <button type="button" class="btn btn-success btn-sm" onclick="fillLoginForm('customer@gmail.com','12345678')">Customer</button>
+            <button type="button" class="btn btn-danger btn-sm" onclick="fillLoginForm('checker@gmail.com','12345678')">Checker</button>
+        </div>
     </div>
 @endsection
+
+
+
+<script>
+fillLoginForm();
+
+    function fillLoginForm(email,password){
+        console.log('sdf');
+        document.getElementById("email").value = email;
+        document.getElementById("password").value = password;
+    }
+
+
+</script>
+

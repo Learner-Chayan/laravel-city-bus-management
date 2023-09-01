@@ -27,7 +27,7 @@ class HomeController extends Controller
 
         $data['total_bus'] = Bus::count();
         $data['total_owner'] = User::where('customer_type',2)->count();
-        $data['total_route'] = User::count();
+        $data['total_route'] = Route::count();
         $data['total_ticket_sale'] = Ticket_sale::where('status',1)->sum('fare_amount');
 
 

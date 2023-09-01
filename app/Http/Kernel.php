@@ -51,5 +51,9 @@ class Kernel extends HttpKernel
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
         'isAdmin' => \App\Http\Middleware\AdminMiddleware::class,
         'Setting' => \App\Http\Middleware\BasicMiddleware::class,
+        'isOwner' => \App\Http\Middleware\OwnerMiddleware::class,
+        'isChecker' => \App\Http\Middleware\CheckerMiddleware::class,
+        'isHelperOrDriver' => \App\Http\Middleware\HelperAndDriverMiddleware::class,
+        'isCustomer' => \App\Http\Middleware\CustomerMiddleware::class,
     ];
 }

@@ -33,7 +33,7 @@ Route::get('dashboard',['as' => 'dashboard' , 'uses' => 'HomeController@dashboar
 
 Route::get('auth/google', 'Auth\LoginController@redirectToGoogle');
 Route::get('auth/google/callback', 'Auth\LoginController@handleGoogleCallback');
-Route::group(['prefix' => 'admin','middleware' => 'auth'], function () {
+Route::group(['prefix' => 'admin','middleware' => ['auth']], function () {
 
     Route::get('edit-profile', ['as' => 'edit-profile', 'uses' => 'HomeController@editProfile']);
     Route::post('edit-profile', ['as' => 'update-profile', 'uses' => 'HomeController@updateProfile']);
@@ -115,33 +115,3 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'], function () {
 // });
 
 
-Route::get('/stoppage-get',function (){
-    $routeId = \Illuminate\Support\Facades\Request::get('route_id');
-    $route = \App\Models\Route::findOrFail($routeId);
-    $stoppageIds = json_decode($route->stoppage_id);
-    $stoppage = [];
-    foreach ($stoppageIds as $stop){
-        $stoppage[] = \App\Models\Stopage::findOrFail($stop);
-    }
-    return $stoppage;
-});
-Route::get('/get-owner-employee',function (){
-    $ownerId = \Illuminate\Support\Facades\Request::get('owner_id');
-    $employees = \App\Models\UserDetails::where('owner_id',$ownerId)->get();
-    $bus = \App\Models\Bus::where('owner_id',$ownerId)->get();
-
-    $driver = [];
-    $checker = [];
-    $helper = [];
-    foreach ($employees as $employee){
-        $em = \App\User::findOrFail($employee->user_id);
-        if ($em->customer_type == 3){
-            $driver[] = $em;
-        }elseif ($em->customer_type == 4){
-            $checker[] = $em;
-        }else{
-            $helper[] = $em;
-        }
-    }
-    return Response::json(['bus'=> $bus,'driver' => $driver, 'checker' => $checker, 'helper' => $helper]);
-});

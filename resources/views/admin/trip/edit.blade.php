@@ -150,6 +150,16 @@
 
             // }
         }
+
+
+        $(function(){
+				$('*[name=start_time],[name=end_time]').appendDtpicker({
+					amPmInTimeList:true,
+                    closeButton:false,
+                    todayButton:false,
+                    futureOnly:true
+				});
+			});
     </script>
 
 @endpush
